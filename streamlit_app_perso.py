@@ -81,7 +81,7 @@ elif page=="Simulation":
         # appliquer
         scaler_length.transform()
 
-        # concaténationf tfidf et longueur du commentaire
+        # concaténation tfidf et longueur du commentaire
 
 
         # chargement du modèle et de ses paramètres
