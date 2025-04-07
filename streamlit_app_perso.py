@@ -4,12 +4,12 @@ st.title("Analyse des commentaires clients")
 
 # Structure des pages
 st.sidebar.title("Sommaire")
-pages=["Présentation","Exploration", "Feature Engineering", "DataVisualisation", "Simulation"]
+pages=["Présentation du projet","Exploration", "Feature Engineering", "DataVisualisation", "Simulation"]
 page=st.sidebar.radio("Aller vers", pages)
 st.sidebar.divider()
 st.sidebar.write("Sébastien S")
 
-if page=="Présentation":
+if page=="Présentation du projet":
     st.write("Présentation du projet")
 
 elif page=="Exploration":
@@ -29,8 +29,7 @@ elif page=="Simulation":
         st.divider()
         st.write("Commentaire:")
         st.write(inputcommentaire)
-        st.write("Longueur:")
-        st.write(len(inputcommentaire))
+        st.write("Longueur du commentaire:",len(inputcommentaire))
 
         import spacy
         nlp=spacy.load('fr_core_news_sm')
@@ -38,3 +37,8 @@ elif page=="Simulation":
         def lemmatisation_spacy(texte) :
             doc = nlp(texte)
             return ' '.join([token.lemma_ for token in doc])
+        
+        text_lemm=lemmatisation_spacy(inputcommentaire)
+
+        st.write("Commentaire avec lemmatisation spacy:")
+        st.write(text_lemm)
