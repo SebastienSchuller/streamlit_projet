@@ -31,3 +31,10 @@ elif page=="Simulation":
         st.write(inputcommentaire)
         st.write("Longueur:")
         st.write(len(inputcommentaire))
+
+        import spacy
+        nlp=spacy.load('fr_core_news_sm')
+
+        def lemmatisation_spacy(texte) :
+            doc = nlp(texte)
+            return ' '.join([token.lemma_ for token in doc])
