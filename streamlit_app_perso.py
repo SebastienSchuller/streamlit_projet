@@ -31,6 +31,18 @@ elif page=="Simulation":
         st.write(inputcommentaire)
         st.write("Longueur du commentaire:",len(inputcommentaire))
 
+        # mise en minuscule, on garde le commentaire initial dans inputcommentaire
+        commentaire=inputcommentaire.lower()
+
+        # suppression des chiffres
+        import re
+        numbers=re.compile('[0-9]+')
+        commentaire=numbers.sub('',commentaire)
+
+        # suppression des smileys
+        import emoji
+        commentaire= emoji.demojize(commentaire, language="fr")
+
         with st.spinner("Chargement des librairies..."):
             import spacy
             nlp=spacy.load('fr_core_news_sm')
@@ -40,7 +52,8 @@ elif page=="Simulation":
             return ' '.join([token.lemma_ for token in doc])
 
         with st.spinner("Lemmatisation.."):        
-            text_lemm=lemmatisation_spacy(inputcommentaire)
+            text_lemm=lemmatisation_spacy(commentaire)
 
         st.write("Commentaire avec lemmatisation spacy:")
         st.write(text_lemm)
+
