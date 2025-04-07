@@ -6,7 +6,7 @@ st.title("Analyse des commentaires clients")
 st.sidebar.title("Sommaire")
 pages=["Présentation","Exploration", "Feature Engineering", "DataVisualisation", "Simulation"]
 page=st.sidebar.radio("Aller vers", pages)
-st.sidebar.markdown("---")
+st.sidebar.divider()
 st.sidebar.write("Sébastien S")
 
 if page=="Présentation":
@@ -26,7 +26,7 @@ elif page=="Simulation":
 
     # bouton de validation
     if st.button("Analyser"):
-        st.markdown("---")
+        st.divider()
         st.write("Commentaire:")
         st.write(inputcommentaire)
         st.write("Longueur:")
