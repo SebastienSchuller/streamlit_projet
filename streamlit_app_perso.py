@@ -60,6 +60,8 @@ elif page=="Simulation":
         # à ce stade le commentaire est pré-processer à l'identique
 
         #stopwords
+        import nltk
+        nltk.download('stopwords')
         from nltk.corpus import stopwords
         stop_words=set(stopwords.words('french'))
         stop_words.update(['a','j\'ai','car','a','c\'est','veepee','showroom'])
