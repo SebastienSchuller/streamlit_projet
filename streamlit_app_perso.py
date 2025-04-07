@@ -52,8 +52,36 @@ elif page=="Simulation":
             return ' '.join([token.lemma_ for token in doc])
 
         with st.spinner("Lemmatisation.."):        
-            text_lemm=lemmatisation_spacy(commentaire)
+            commentaire=lemmatisation_spacy(commentaire)
 
         st.write("Commentaire avec lemmatisation spacy:")
-        st.write(text_lemm)
+        st.write(commentaire)
 
+        # à ce stade le commentaire est pré-processer à l'identique
+
+        #stopwords
+        from nltk.corpus import stopwords
+        stop_words=set(stopwords.words('french'))
+        stop_words.update(['a','j\'ai','car','a','c\'est','veepee','showroom'])
+        
+        # Vectorisation tf-idf: chargement du vocabulaire
+        from sklearn.feature_extraction.text import TfidfVectorizer 
+        vectorizer=TfidfVectorizer(strip_accents='unicode',stop_words=list(stop_words)) # on supprime les accents
+        
+        # todo: charger le vocabulaire TODO
+        # appliquer
+        vectorizer.transform()
+
+        # min max sur la longueur
+        from sklearn.preprocessing import MinMaxScaler
+        scaler_length=MinMaxScaler()
+        # charger min et max TODO
+        # appliquer
+        scaler_length.transform()
+
+        # concaténationf tfidf et longueur du commentaire
+
+
+        # chargement du modèle et de ses paramètres
+
+        # processing de l'exemple
