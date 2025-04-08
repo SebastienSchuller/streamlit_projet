@@ -4,7 +4,7 @@ st.title("Analyse des commentaires clients")
 
 # Structure des pages
 st.sidebar.title("Sommaire")
-pages=["Présentation du projet","Exploration", "Feature Engineering", "DataVisualisation", "Simulation"]
+pages=["Présentation du projet","Exploration", "Feature Engineering", "DataVisualisation", "Simulation LGBM"]
 page=st.sidebar.radio("Aller vers", pages)
 st.sidebar.divider()
 st.sidebar.write("Sébastien S")
@@ -18,8 +18,8 @@ elif page=="Exploration":
 elif page=="DataVisualisation":    
     st.write ("Datavisualisation")
 
-elif page=="Simulation":
-    st.write('Saisssez un commentaire à analyser avec le modèle')
+elif page=="Simulation LGBM":
+    st.write('Saisssez un commentaire à analyser avec le modèle LGBM')
 
     # zone de saisie du commentaire à tester
     inputcommentaire=st.text_input("Commentaire à analyser:","Super produit !")
