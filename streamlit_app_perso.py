@@ -126,6 +126,7 @@ elif page=="Simulation Camembert + Captum":
             model_path='./models/camembert/'
             
             # chargement du tokenizer
+            st.write("tokenizer à charger")
             tokenizer = AutoTokenizer.from_pretrained(model_path)
             st.write("tokenizer chargé")
             # chargement du modèle
