@@ -126,9 +126,7 @@ elif page=="Simulation Camembert + Captum":
             model_path='./models/camembert/'
             
             # chargement du tokenizer
-            st.write("tokenizer à charger")
-            import transformers
-            st.write(f"Version de Transformers : {transformers.__version__}")
+            
             tokenizer = AutoTokenizer.from_pretrained(model_path,use_fast=False,local_files_only=True)
             st.write("tokenizer chargé")
             # chargement du modèle
@@ -215,8 +213,11 @@ elif page=="Simulation Camembert + Captum":
         with st.spinner("Calcul de l'Occlusion..."):
             # calcul du nombre de token
             inputs = tokenizer(inputcommentaire, return_tensors="pt", truncation=True, padding=True)
+            st.write(inputs)
+            st.write(inputs['input_ids'])
+            st.write(inputs['input_ids'].shape[1])
 
-            for s in range(1,min(len(inputs[0])+1,fenetre_occ_max+1)):
+            for s in range(1,min(inputs['input_ids'].shape[1]+1,fenetre_occ_max+1)):
                 tokens,attrib=interpretabilite_occlusion(model,inputcommentaire,predictions.numpy()[0] + 1,sliding_window_shapes=(s,),show_progress=False)
 
                 html_content=show_texte_color(tokens[1:-1],attrib[1:-1]) # avec le slicing on retire les tokens de début et fin de phrase (<s> et </s> qui en plus font l'affichage barré)
