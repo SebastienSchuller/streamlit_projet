@@ -29,7 +29,8 @@ elif page=="Simulation":
         st.divider()
         st.write("Commentaire:")
         st.write(inputcommentaire)
-        st.write("Longueur du commentaire:",len(inputcommentaire))
+        comm_length=len(inputcommentaire)
+        st.write("Longueur du commentaire:",comm_length)
 
         # mise en minuscule, on garde le commentaire initial dans inputcommentaire
         commentaire=inputcommentaire.lower()
@@ -60,30 +61,36 @@ elif page=="Simulation":
         # à ce stade le commentaire est pré-processer à l'identique
 
         #stopwords
-        import nltk
-        nltk.download('stopwords')
-        from nltk.corpus import stopwords
-        stop_words=set(stopwords.words('french'))
-        stop_words.update(['a','j\'ai','car','a','c\'est','veepee','showroom'])
-        
+        #import nltk
+        #nltk.download('stopwords')
+        #from nltk.corpus import stopwords
+        #stop_words=set(stopwords.words('french'))
+        #stop_words.update(['a','j\'ai','car','a','c\'est','veepee','showroom'])
+
+        import joblib
+        import numpy as np
+        import pandas as pd
+
         # Vectorisation tf-idf: chargement du vocabulaire
-        from sklearn.feature_extraction.text import TfidfVectorizer 
-        vectorizer=TfidfVectorizer(strip_accents='unicode',stop_words=list(stop_words)) # on supprime les accents
-        
-        # todo: charger le vocabulaire TODO
-        # appliquer
-        vectorizer.transform()
+        from sklearn.feature_extraction.text import TfidfVectorizer         
+        vectorizer=joblib.load("./models/tfidf.pkl")
+        vector_commentaire=vectorizer.transform([commentaire])
+
+        #st.write("Vecteur après tfidf:",vector_commentaire.shape)
 
         # min max sur la longueur
         from sklearn.preprocessing import MinMaxScaler
-        scaler_length=MinMaxScaler()
-        # charger min et max TODO
-        # appliquer
-        scaler_length.transform()
+        scaler_length=joblib.load("./models/scaler.pkl")
+        comm_length=scaler_length.transform(np.array(comm_length).reshape(1,-1))
+        #st.write("Vecteur longueur:",comm_length.shape)
 
-        # concaténation tfidf et longueur du commentaire
-
+        X_pred_vector=pd.DataFrame(np.hstack((vector_commentaire.todense(),comm_length)))
+        #st.write("Vecteur d'entrée du modèle avec ajout de la longueur:",X_pred_vector.shape)
 
         # chargement du modèle et de ses paramètres
+        from lightgbm import LGBMClassifier
+        model=joblib.load("./models/lgbm.pkl")
 
+        y_test=model.predict(X_pred_vector)
+        st.write(y_test)
         # processing de l'exemple
