@@ -127,6 +127,8 @@ elif page=="Simulation Camembert + Captum":
             
             # chargement du tokenizer
             st.write("tokenizer à charger")
+            import transformers
+            st.write(f"Version de Transformers : {transformers.__version__}")
             tokenizer = AutoTokenizer.from_pretrained(model_path)
             st.write("tokenizer chargé")
             # chargement du modèle
