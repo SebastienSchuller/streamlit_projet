@@ -223,3 +223,7 @@ elif page=="Simulation Camembert + Captum":
 elif page=="Performance des modèles":
     st.write("Comparaison sur un jeu de xx commentaire de l'acc / aobo de LGBM, Camembert réentrainé, un LLM éventuellement")
     st.write("avec option pour échantillon stratifié ?")
+    st.write("champ mot de passe pour mettre une clé LLM")
+
+elif page=="Simulation LLM":
+    st.write("champ mot de passe pour mettre une clé LLM")
