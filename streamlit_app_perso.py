@@ -7,7 +7,7 @@ st.title("Analyse des commentaires clients")
 # Structure des pages
 st.sidebar.title("Sommaire")
 pages=["Présentation du projet","Exploration", "Feature Engineering", "DataVisualisation", "Performance des modèles", "Simulation LGBM + shap", "Simulation Camembert + Captum","Simulation LLM"]
-page=st.sidebar.radio("Aller vers", pages)
+page=st.sidebar.radio("Aller vers:", pages)
 st.sidebar.divider()
 st.sidebar.write("Sébastien S")
 
@@ -226,12 +226,94 @@ elif page=="Performance des modèles":
     st.write("champ mot de passe pour mettre une clé LLM")
 
 elif page=="Simulation LLM":
-    st.write("champ mot de passe pour mettre une clé LLM")
+
+    if "mistral_api_key" not in st.session_state:
+        st.session_state["mistral_api_key"] = ""
+
+    with st.popover("Paramètres LLM"):
+        st.markdown("Saisissez ici une clé pour l'API de Mistral AI.")
+        mistral_api_key = st.text_input("Mistral AI API Key",type='password',value=st.session_state["mistral_api_key"])
+        if mistral_api_key != st.session_state["mistral_api_key"]:
+            st.session_state["mistral_api_key"] = mistral_api_key
+
+    st.write('## Saisssez un commentaire à analyser avec le LLM')
+    # zone de saisie du commentaire à tester
+    inputcommentaire=st.text_input("Commentaire à analyser:","Super produit !")
+    # bouton de validation
+    if st.button("Analyser"):
+        st.divider()
+        
     st.write("Approche structured output avec note, mots clés, thème. résumé ?")
     st.write("inclus une écriture de la réponse ?")
+
+
 
 elif page=="Feature Engineering":
     st.write("Comparaison Stemming, Lemming NLTK / Spacy (large et grand model) avec un commentaire bien choisie en exemple et la possibilité de taper un commentaire")
     st.write("Montrer aussi la tokenisation/vectorisation BoW, TFIDF (avec la formule et les ngrammes), tiktoken")    
-    st.write("Autres features: encodage de smileys, traitement des nombres, de la ponctuation, des majuscules...")
 
+    st.write('## Saissez un commentaire:')
+
+    # zone de saisie du commentaire à tester
+    inputcommentaire=st.text_input("Commentaire à analyser:","Super produit !")
+
+    # bouton de validation
+    if st.button("Simuler les Feature Engineering"):
+        st.divider()
+
+        # mise en minuscule, on garde le commentaire initial dans inputcommentaire
+        commentaire=inputcommentaire.lower()
+
+        # suppression des chiffres
+        import re
+        numbers=re.compile('[0-9]+')
+        commentaire=numbers.sub('',commentaire)
+ 
+        # suppression des smileys
+        import emoji
+        commentaire= emoji.demojize(commentaire, language="fr")
+
+        # Stemming
+        from nltk.stem.snowball import FrenchStemmer
+        stemmer=FrenchStemmer()
+
+        mots = commentaire.split()
+        mots_stem = [stemmer.stem(mot) for mot in mots]
+        commentaire_stem = ' '.join(mots_stem)
+
+        # Lemmingisation avec NLTK
+        from nltk.stem import WordNetLemmatizer
+        wordnet_lemmatizer = WordNetLemmatizer()
+        mots_lemm = [wordnet_lemmatizer.lemmatize(mot) for mot in mots]
+        commentaire_lemm = ' '.join(mots_lemm)
+
+        # Lemmatisation avec Spacy
+        with st.spinner("Calcul des features..."):
+            import spacy
+            nlp_sm=spacy.load('fr_core_news_sm')
+            nlp_lg=spacy.load('fr_core_news_lg')
+
+            def lemmatisation_spacy(texte,model_spacy) :
+                doc = model_spacy(texte)
+                return ' '.join([token.lemma_ for token in doc])
+              
+            commentaire_spacy_sm=lemmatisation_spacy(commentaire,nlp_sm)    
+            commentaire_spacy_lg=lemmatisation_spacy(commentaire,nlp_lg)  
+        
+
+        dict_feature={
+            "Commentaire brut": inputcommentaire,
+            "Longueur du commentaire": len(inputcommentaire),
+            "Commentaire en minuscule": commentaire,
+            "Commentaire sans chiffres": commentaire,
+            "Commentaire sans smileys": commentaire,
+            "Commentaire après stemming NLTK": commentaire_stem,
+            "Commentaire après lemming NLTK": commentaire_lemm,
+            "Commentaire après lemmatisation Spacy (modèle fr_core_news_sm)": commentaire_spacy_sm,
+            "Commentaire après lemmatisation Spacy (modèle fr_core_news_lg)": commentaire_spacy_lg
+        }
+        import pandas as pd
+        df_feature=pd.DataFrame(dict_feature.items(),columns=["Etape","Texte"])
+
+
+        st.dataframe(data=df_feature,hide_index=True,use_container_width=True)  
