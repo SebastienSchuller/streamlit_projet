@@ -234,3 +234,6 @@ elif page=="Feature Engineering":
     st.write("Comparaison Stemming, Lemming NLTK / Spacy (large et grand model) avec un commentaire bien choisie en exemple et la possibilité de taper un commentaire")
     st.write("Montrer aussi la tokenisation/vectorisation BoW, TFIDF (avec la formule et les ngrammes), tiktoken")    
     st.write("Autres features: encodage de smileys, traitement des nombres, de la ponctuation, des majuscules...")
+
+elif page=="DataVisualisation":
+    st.write("Possibilité d'utiliser streamlit-folium")
