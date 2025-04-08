@@ -27,10 +27,8 @@ elif page=="Simulation":
     # bouton de validation
     if st.button("Analyser"):
         st.divider()
-        st.write("Commentaire:")
-        st.write(inputcommentaire)
         comm_length=len(inputcommentaire)
-        st.write("Longueur du commentaire:",comm_length)
+        st.write("Longueur du commentaire:",comm_length, "caractères")
 
         # mise en minuscule, on garde le commentaire initial dans inputcommentaire
         commentaire=inputcommentaire.lower()
@@ -55,17 +53,8 @@ elif page=="Simulation":
         with st.spinner("Lemmatisation.."):        
             commentaire=lemmatisation_spacy(commentaire)
 
-        st.write("Commentaire avec lemmatisation spacy:")
-        st.write(commentaire)
+        st.write("Commentaire après lemmatisation Spacy:",commentaire)
 
-        # à ce stade le commentaire est pré-processer à l'identique
-
-        #stopwords
-        #import nltk
-        #nltk.download('stopwords')
-        #from nltk.corpus import stopwords
-        #stop_words=set(stopwords.words('french'))
-        #stop_words.update(['a','j\'ai','car','a','c\'est','veepee','showroom'])
 
         import joblib
         import numpy as np
@@ -92,5 +81,28 @@ elif page=="Simulation":
         model=joblib.load("./models/lgbm.pkl")
 
         y_test=model.predict(X_pred_vector)
-        st.write(y_test)
-        # processing de l'exemple
+        st.write("Le modèle LGBM prédit une note de:",y_test[0],"pour ce commentaire.")
+       
+        # Interprétabilité avec shap ?
+        with st.spinner("Calcul de l'interprétabilité shap..."):
+            import shap
+            shap.initjs()
+
+            explainer = shap.TreeExplainer(model)
+            shap_values_pipe = explainer.shap_values(X_pred_vector) 
+
+        individu=0
+
+       
+
+        feature_names = vectorizer.get_feature_names_out().tolist() + ['Commentaire_len']
+
+        # pour l'individu 1 et toutes les i classes
+        # Boucle pour afficher plusieurs graphiques SHAP 
+        import matplotlib.pyplot as plt
+
+        for i in range(5):
+            st.write(f"### Star: {i+1}")
+            fig = plt.figure()
+            shap.force_plot(explainer.expected_value[i],shap_values_pipe[individu,...,i],X_pred_vector,feature_names=feature_names,matplotlib=True)
+            st.pyplot(plt.gcf())
