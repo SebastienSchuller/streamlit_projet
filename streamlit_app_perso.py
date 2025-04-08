@@ -227,6 +227,8 @@ elif page=="Performance des modèles":
 
 elif page=="Simulation LLM":
     st.write("champ mot de passe pour mettre une clé LLM")
+    st.write("Approche structured output avec note, mots clés, thème. résumé ?")
+    st.write("inclus une écriture de la réponse ?")
 
 elif page=="Feature Engineering":
     st.write("Comparaison Stemming, Lemming NLTK / Spacy (large et grand model) avec un commentaire bien choisie en exemple et la possibilité de taper un commentaire")
