@@ -4,7 +4,7 @@ st.title("Analyse des commentaires clients")
 
 # Structure des pages
 st.sidebar.title("Sommaire")
-pages=["Présentation du projet","Exploration", "Feature Engineering", "DataVisualisation", "Simulation LGBM"]
+pages=["Présentation du projet","Exploration", "Feature Engineering", "DataVisualisation", "Simulation LGBM", "Simulation Camembert","Simulation LLM"]
 page=st.sidebar.radio("Aller vers", pages)
 st.sidebar.divider()
 st.sidebar.write("Sébastien S")
