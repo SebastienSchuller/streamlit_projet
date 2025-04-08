@@ -6,7 +6,7 @@ st.title("Analyse des commentaires clients")
 
 # Structure des pages
 st.sidebar.title("Sommaire")
-pages=["Présentation du projet","Exploration", "Feature Engineering", "DataVisualisation", "Simulation LGBM + shap", "Simulation Camembert + Captum","Simulation LLM"]
+pages=["Présentation du projet","Exploration", "Feature Engineering", "DataVisualisation", "Performance des modèles", "Simulation LGBM + shap", "Simulation Camembert + Captum","Simulation LLM"]
 page=st.sidebar.radio("Aller vers", pages)
 st.sidebar.divider()
 st.sidebar.write("Sébastien S")
@@ -219,3 +219,7 @@ elif page=="Simulation Camembert + Captum":
 
                 html_content=show_texte_color(tokens[1:-1],attrib[1:-1]) # avec le slicing on retire les tokens de début et fin de phrase (<s> et </s> qui en plus font l'affichage barré)
                 st.html(html_content)
+
+elif page=="Performance des modèles":
+    st.write("Comparaison sur un jeu de xx commentaire de l'acc / aobo de LGBM, Camembert réentrainé, un LLM éventuellement")
+    st.write("avec option pour échantillon stratifié ?")
