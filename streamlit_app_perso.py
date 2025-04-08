@@ -216,5 +216,5 @@ elif page=="Simulation Camembert + Captum":
             for s in range(1,min(len(inputs[0])+1,fenetre_occ_max+1)):
                 tokens,attrib=interpretabilite_occlusion(model,inputcommentaire,predictions.numpy()[0] + 1,sliding_window_shapes=(s,),show_progress=False)
 
-                html_content=show_texte_color(tokens,attrib)
+                html_content=show_texte_color(tokens[1:-1],attrib[1:-1]) # avec le slicing on retire les tokens de début et fin de phrase (<s> et </s> qui en plus font l'affichage barré)
                 st.html(html_content)
