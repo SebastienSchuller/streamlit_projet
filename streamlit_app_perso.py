@@ -86,7 +86,6 @@ elif page=="Simulation":
         # Interprétabilité avec shap ?
         with st.spinner("Calcul de l'interprétabilité shap..."):
             import shap
-            shap.initjs()
 
             explainer = shap.TreeExplainer(model)
             shap_values_pipe = explainer.shap_values(X_pred_vector) 
