@@ -19,7 +19,7 @@ elif page=="DataVisualisation":
     st.write ("Datavisualisation")
 
 elif page=="Simulation LGBM":
-    st.write('Saisssez un commentaire à analyser avec le modèle LGBM')
+    st.write('## Saisssez un commentaire à analyser avec le modèle LGBM')
 
     # zone de saisie du commentaire à tester
     inputcommentaire=st.text_input("Commentaire à analyser:","Super produit !")
@@ -62,14 +62,14 @@ elif page=="Simulation LGBM":
 
         # Vectorisation tf-idf: chargement du vocabulaire
         from sklearn.feature_extraction.text import TfidfVectorizer         
-        vectorizer=joblib.load("./models/tfidf.pkl")
+        vectorizer=joblib.load("./models/lgbm/tfidf.pkl")
         vector_commentaire=vectorizer.transform([commentaire])
 
         #st.write("Vecteur après tfidf:",vector_commentaire.shape)
 
         # min max sur la longueur
         from sklearn.preprocessing import MinMaxScaler
-        scaler_length=joblib.load("./models/scaler.pkl")
+        scaler_length=joblib.load("./models/lgbm/scaler.pkl")
         comm_length=scaler_length.transform(np.array(comm_length).reshape(1,-1))
         #st.write("Vecteur longueur:",comm_length.shape)
 
@@ -78,7 +78,7 @@ elif page=="Simulation LGBM":
 
         # chargement du modèle et de ses paramètres
         from lightgbm import LGBMClassifier
-        model=joblib.load("./models/lgbm.pkl")
+        model=joblib.load("./models/lgbm/lgbm.pkl")
 
         y_test=model.predict(X_pred_vector)
         st.write("Le modèle LGBM prédit une note de:",y_test[0],"pour ce commentaire.")
@@ -105,3 +105,12 @@ elif page=="Simulation LGBM":
             fig = plt.figure()
             shap.force_plot(explainer.expected_value[i],shap_values_pipe[individu,...,i],X_pred_vector,feature_names=feature_names,matplotlib=True)
             st.pyplot(plt.gcf())
+
+elif page=="Simulation Camembert":
+    st.write('## Saisssez un commentaire à analyser avec le modèle Camembert')
+    # zone de saisie du commentaire à tester
+    inputcommentaire=st.text_input("Commentaire à analyser:","Super produit !")
+
+    # bouton de validation
+    if st.button("Analyser"):
+        st.divider()
