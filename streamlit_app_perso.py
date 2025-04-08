@@ -18,7 +18,7 @@ elif page=="Exploration":
     st.write("Exploration des données")
 
 elif page=="DataVisualisation":    
-    st.write ("Datavisualisation")
+    st.write("Possibilité d'utiliser streamlit-folium")
 
 elif page=="Simulation LGBM + shap":
     st.write('## Saisssez un commentaire à analyser avec le modèle LGBM')
@@ -235,5 +235,3 @@ elif page=="Feature Engineering":
     st.write("Montrer aussi la tokenisation/vectorisation BoW, TFIDF (avec la formule et les ngrammes), tiktoken")    
     st.write("Autres features: encodage de smileys, traitement des nombres, de la ponctuation, des majuscules...")
 
-elif page=="DataVisualisation":
-    st.write("Possibilité d'utiliser streamlit-folium")
