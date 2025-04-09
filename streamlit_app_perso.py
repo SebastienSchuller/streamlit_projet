@@ -123,7 +123,8 @@ elif page=="Simulation Camembert + Captum":
             from transformers import AutoModelForSequenceClassification, AutoTokenizer
             import torch
 
-            model_path='./models/camembert/'
+            #model_path='./models/camembert/'
+            model_path="Microbug/camembert-base-reviewfr"
             
             # chargement du tokenizer
             
