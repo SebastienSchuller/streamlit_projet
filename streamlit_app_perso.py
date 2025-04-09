@@ -1,6 +1,6 @@
 import streamlit as st
 
-st.set_page_config(page_title="DS - Orange - Supply Chain", page_icon="🚀")
+st.set_page_config(page_title="DS - Orange - Supply Chain", page_icon="🚀",layout="wide")
 
 st.title("Analyse des commentaires clients")
 
@@ -258,8 +258,8 @@ elif page=="Simulation LLM":
 
 
 elif page=="Feature Engineering":
-    st.write("Comparaison Stemming, Lemming NLTK / Spacy (large et grand model) avec un commentaire bien choisie en exemple et la possibilité de taper un commentaire")
-    st.write("Montrer aussi la tokenisation/vectorisation BoW, TFIDF (avec la formule et les ngrammes), tiktoken")    
+    
+    
 
     st.write('## Saissez un commentaire:')
 
@@ -328,3 +328,48 @@ elif page=="Feature Engineering":
 
 
         st.dataframe(data=df_feature,hide_index=True,use_container_width=True)  
+
+        st.divider()
+        st.write("## Vectorisation (basé sur le commentaire traité avec Spacy fr_core_news_sm)")
+    
+        # BoW
+        from sklearn.feature_extraction.text import CountVectorizer
+        from nltk.corpus import stopwords
+        
+        stop_words=set(stopwords.words('french'))
+        stop_words.update(['a','j\'ai','car','a','c\'est','veepee','showroom'])
+
+        BoW=CountVectorizer(strip_accents='unicode',stop_words=list(stop_words)) # on supprime les accents
+        BoW.fit([commentaire_spacy_sm])
+        result_bow=BoW.transform([commentaire_spacy_sm])
+        st.write("### BoW")
+        st.dataframe(pd.DataFrame(result_bow.todense(),columns=BoW.get_feature_names_out()),hide_index=True)
+
+        # TFIDF
+        from sklearn.feature_extraction.text import TfidfVectorizer 
+
+        tfidf=TfidfVectorizer(strip_accents='unicode',stop_words=list(stop_words)) # on supprime les accents
+        tfidf.fit([commentaire_spacy_sm])
+        result_tfidf=tfidf.transform([commentaire_spacy_sm])
+        st.write("### TF-IDF")
+        st.dataframe(pd.DataFrame(result_tfidf.todense(),columns=tfidf.get_feature_names_out()),hide_index=True)
+
+        # TFIDF et ngrames
+        tfidf=TfidfVectorizer(strip_accents='unicode',stop_words=list(stop_words),ngram_range=(1,2)) # on supprime les accents
+        tfidf.fit([commentaire_spacy_sm])
+        result_tfidf=tfidf.transform([commentaire_spacy_sm])
+        st.write("### TF-IDF (ngrames=(1,2))")
+        st.dataframe(pd.DataFrame(result_tfidf.todense(),columns=tfidf.get_feature_names_out()),hide_index=True)
+
+        # Tiktoken
+        import tiktoken
+        tiktoken=tiktoken.get_encoding("cl100k_base")
+        tiktoken_tokens = tiktoken.encode(commentaire_spacy_sm)
+        st.write("### Tiktoken")
+        st.write(tiktoken_tokens)
+
+        dict_tiktoken={}
+        for i, token in enumerate(tiktoken_tokens):
+            dict_tiktoken[token]=tiktoken.decode([token])
+            #st.write(f"Index {i}: Token ID {token} → '{tiktoken.decode([token])}'")
+        st.write(dict_tiktoken)
