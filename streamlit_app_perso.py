@@ -141,7 +141,8 @@ elif page=="Simulation Camembert + Captum":
         with torch.no_grad():
             outputs = model(**encodings)
             predictions = torch.argmax(outputs.logits, dim=1)
-            st.write("Notation du modèle Camembert réentrainé:",predictions.numpy()[0] + 1)  # Revenir à la notation initiale (1-5)
+            # st.write(predictions)
+            st.write("Notation du modèle Camembert réentrainé:",predictions.to("cpu").numpy()[0] + 1)  # Revenir à la notation initiale (1-5)
 
         # interprétabilité par Occlusion avec captum
         from captum.attr import Occlusion
