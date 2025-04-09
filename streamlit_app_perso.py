@@ -128,7 +128,9 @@ elif page=="Simulation Camembert + Captum":
             
             # chargement du tokenizer
             
-            tokenizer = AutoTokenizer.from_pretrained(model_path,use_fast=False,local_files_only=True)
+            # tokenizer = AutoTokenizer.from_pretrained(model_path,use_fast=False,local_files_only=True)
+
+            tokenizer = AutoTokenizer.from_pretrained(model_path,use_fast=False)
 
             # chargement du modèle
             model = AutoModelForSequenceClassification.from_pretrained(model_path)
