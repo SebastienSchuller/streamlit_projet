@@ -293,6 +293,7 @@ elif page=="Feature Engineering":
         # Lemmingisation avec NLTK
         import nltk
         nltk.download('wordnet')
+        nltk.download('stopwords')
         from nltk.stem import WordNetLemmatizer
         wordnet_lemmatizer = WordNetLemmatizer()
         mots_lemm = [wordnet_lemmatizer.lemmatize(mot) for mot in mots]
