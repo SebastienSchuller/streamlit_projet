@@ -291,6 +291,8 @@ elif page=="Feature Engineering":
         commentaire_stem = ' '.join(mots_stem)
 
         # Lemmingisation avec NLTK
+        import nltk
+        nltk.download('wordnet')
         from nltk.stem import WordNetLemmatizer
         wordnet_lemmatizer = WordNetLemmatizer()
         mots_lemm = [wordnet_lemmatizer.lemmatize(mot) for mot in mots]
