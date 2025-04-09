@@ -347,13 +347,10 @@ elif page=="Feature Engineering":
         import pandas as pd
         df_feature=pd.DataFrame(dict_feature.items(),columns=["Etape","Texte"])
 
-        # container
-        cont=st.container(height=400)
+        st.dataframe(data=df_feature,hide_index=True,use_container_width=True)  
 
-        cont.dataframe(data=df_feature,hide_index=True,use_container_width=True)  
-
-        cont.divider()
-        cont.write("## Vectorisation (basé sur le commentaire traité avec Spacy fr_core_news_sm)")
+        st.divider()
+        st.write("## Vectorisation (basé sur le commentaire traité avec Spacy fr_core_news_sm)")
     
         # BoW
         from sklearn.feature_extraction.text import CountVectorizer
@@ -365,8 +362,8 @@ elif page=="Feature Engineering":
         BoW=CountVectorizer(strip_accents='unicode',stop_words=list(stop_words)) # on supprime les accents
         BoW.fit([commentaire_spacy_sm,commentaire_spacy_sm_2])
         result_bow=BoW.transform([commentaire_spacy_sm,commentaire_spacy_sm_2])
-        cont.write("### BoW")
-        cont.dataframe(pd.DataFrame(result_bow.todense(),columns=BoW.get_feature_names_out()),hide_index=True)
+        st.write("### BoW")
+        st.dataframe(pd.DataFrame(result_bow.todense(),columns=BoW.get_feature_names_out()),hide_index=True)
 
         # TFIDF
         from sklearn.feature_extraction.text import TfidfVectorizer 
@@ -374,24 +371,24 @@ elif page=="Feature Engineering":
         tfidf=TfidfVectorizer(strip_accents='unicode',stop_words=list(stop_words)) # on supprime les accents
         tfidf.fit([commentaire_spacy_sm,commentaire_spacy_sm_2])
         result_tfidf=tfidf.transform([commentaire_spacy_sm,commentaire_spacy_sm_2])
-        cont.write("### TF-IDF")
-        cont.dataframe(pd.DataFrame(result_tfidf.todense(),columns=tfidf.get_feature_names_out()),hide_index=True)
+        st.write("### TF-IDF")
+        st.dataframe(pd.DataFrame(result_tfidf.todense(),columns=tfidf.get_feature_names_out()),hide_index=True)
 
         # TFIDF et ngrames
         tfidf=TfidfVectorizer(strip_accents='unicode',stop_words=list(stop_words),ngram_range=(1,2)) # on supprime les accents
         tfidf.fit([commentaire_spacy_sm,commentaire_spacy_sm_2])
         result_tfidf=tfidf.transform([commentaire_spacy_sm,commentaire_spacy_sm_2])
-        cont.write("### TF-IDF (ngrames=(1,2))")
-        cont.dataframe(pd.DataFrame(result_tfidf.todense(),columns=tfidf.get_feature_names_out()),hide_index=True)
+        st.write("### TF-IDF (ngrames=(1,2))")
+        st.dataframe(pd.DataFrame(result_tfidf.todense(),columns=tfidf.get_feature_names_out()),hide_index=True)
 
         # Tiktoken
         import tiktoken
         tiktoken=tiktoken.get_encoding("cl100k_base")
         tiktoken_tokens = tiktoken.encode(commentaire_spacy_sm)
         tiktoken_tokens_2=tiktoken.encode(commentaire_spacy_sm_2)
-        cont.write("### Tiktoken")
+        st.write("### Tiktoken")
 
-        #col1,col2=cont.columns(2)
+        #col1,col2=st.columns(2)
         #col1.write(tiktoken_tokens)
         #col2.write(tiktoken_tokens_2)     
 
@@ -403,7 +400,7 @@ elif page=="Feature Engineering":
         for i, token in enumerate(tiktoken_tokens_2):
             dict_tiktoken_2[token]=tiktoken.decode([token])
 
-        #col1,col2=cont.columns(2)
+        #col1,col2=st.columns(2)
         #col1.write(dict_tiktoken)
         #col2.write(dict_tiktoken_2)
 
@@ -412,4 +409,4 @@ elif page=="Feature Engineering":
         df_2=pd.DataFrame(list(dict_tiktoken_2.items()), columns=["Vecteur_2", "Token_2"])
         #st.dataframe(df_1)
 
-        cont.dataframe(pd.concat((df_1,df_2),axis=1))
+        st.dataframe(pd.concat((df_1,df_2),axis=1),hide_index=False)
