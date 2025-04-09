@@ -123,18 +123,23 @@ elif page=="Simulation Camembert + Captum":
             from transformers import AutoModelForSequenceClassification, AutoTokenizer
             import torch
 
-            #model_path='./models/camembert/'
-            model_path="Microbug/camembert-base-reviewfr"
-            
-            # chargement du tokenizer
-            
-            # tokenizer = AutoTokenizer.from_pretrained(model_path,use_fast=False,local_files_only=True)
+            import os
+            if "STREAMLIT_SERVER_RUN_ON_SAVE" in os.environ:
+                #st.write("Exécution sur Streamlit Cloud")
+                MODE = "cloud"
+                model_path="Microbug/camembert-base-reviewfr"
+            else:
+                #st.write("Exécution locale")
+                MODE = "local"
+                model_path='./../_camembert/'
+                
 
-            tokenizer = AutoTokenizer.from_pretrained(model_path,use_fast=False)
+            # chargement du tokenizer    
+            tokenizer = AutoTokenizer.from_pretrained(model_path,use_fast=False,local_files_only=True)
+            # tokenizer = AutoTokenizer.from_pretrained(model_path,use_fast=False)
 
             # chargement du modèle
             model = AutoModelForSequenceClassification.from_pretrained(model_path)
-            
 
         new_comments = inputcommentaire#[inputcommentaire]
         encodings = tokenizer(new_comments, truncation=True, padding=True, max_length=128, return_tensors="pt")
