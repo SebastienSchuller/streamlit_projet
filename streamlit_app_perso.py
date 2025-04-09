@@ -4,6 +4,34 @@ st.set_page_config(page_title="DS - Orange - Supply Chain", page_icon="🚀",lay
 
 st.title("Analyse des commentaires clients")
 
+# ETOILE
+def afficher_etoiles(note: float, max_etoiles: int = 5):
+    """
+    Affiche une note sous forme d'étoiles remplies et vides.
+    
+    :param note: Note sur max_etoiles (ex: 3.5 sur 5)
+    :param max_etoiles: Nombre maximum d'étoiles (par défaut 5)
+    """
+    pleine = "⭐"
+    vide = "☆"
+    
+    # Nombre d'étoiles pleines
+    nb_pleines = int(note)  
+
+    # Nombre d'étoiles vides
+    nb_vides = max_etoiles - nb_pleines
+
+    # Construction de l'affichage
+    etoiles = "★" * nb_pleines  # Étoiles pleines
+    etoiles += "☆" * nb_vides  # Étoiles vides
+
+    html_code = f"""
+    <div style="font-size: 32px; color: gold;">
+        {etoiles}
+    </div>
+    """
+    return html_code
+
 # Structure des pages
 st.sidebar.title("Sommaire")
 pages=["Présentation du projet","Exploration", "Feature Engineering", "DataVisualisation", "Performance des modèles", "Simulation LGBM + shap", "Simulation Camembert + Captum","Simulation LLM"]
@@ -85,6 +113,11 @@ elif page=="Simulation LGBM + shap":
         y_test=model.predict(X_pred_vector)
         st.write("Le modèle LGBM prédit une note de:",y_test[0],"pour ce commentaire.")
        
+
+        
+        # Affichage de la note sous forme d'étoiles
+        st.markdown(afficher_etoiles(y_test[0]), unsafe_allow_html=True)
+
         # Interprétabilité avec shap ?
         with st.spinner("Calcul de l'interprétabilité shap..."):
             import shap
@@ -142,15 +175,20 @@ elif page=="Simulation Camembert + Captum":
             model = AutoModelForSequenceClassification.from_pretrained(model_path)
 
         new_comments = inputcommentaire#[inputcommentaire]
-        encodings = tokenizer(new_comments, truncation=True, padding=True, max_length=128, return_tensors="pt")
+        
+        with st.spinner("Tokenisation..."):
+            encodings = tokenizer(new_comments, truncation=True, padding=True, max_length=128, return_tensors="pt")
 
         # Faire des prédictions
-        model.eval()
-        with torch.no_grad():
-            outputs = model(**encodings)
-            predictions = torch.argmax(outputs.logits, dim=1)
-            # st.write(predictions)
-            st.write("Notation du modèle Camembert réentrainé:",predictions.to("cpu").numpy()[0] + 1)  # Revenir à la notation initiale (1-5)
+        with st.spinner("Evaluation..."):
+            model.eval()
+            with torch.no_grad():
+                outputs = model(**encodings)
+                predictions = torch.argmax(outputs.logits, dim=1)
+                # st.write(predictions)
+                st.write("Notation du modèle Camembert réentrainé:",predictions.to("cpu").numpy()[0] + 1)  # Revenir à la notation initiale (1-5)
+
+                st.markdown(afficher_etoiles(predictions.to("cpu").numpy()[0] + 1), unsafe_allow_html=True)
 
         # interprétabilité par Occlusion avec captum
         from captum.attr import Occlusion
@@ -211,6 +249,7 @@ elif page=="Simulation Camembert + Captum":
             # Construire une représentation HTML avec les couleurs
             html_content = ""
             for token, color in zip(tokens, hex_colors):
+                token=token.replace("\u2581","") # suppression du caractère de séparation de BERT
                 html_content += f'<span style="background-color:{color}; padding:2px; margin:1px; border-radius:4px;">{token}</span> '
 
             return html_content
