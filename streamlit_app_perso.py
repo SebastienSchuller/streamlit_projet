@@ -274,8 +274,8 @@ elif page=="Feature Engineering":
 
 
     # zone de saisie du commentaire à tester
-    inputcommentaire=st.text_input("Commentaire à analyser:",key="c1",value=st.session_state["c1"])
-    inputcommentaire_2=st.text_input("2ème commentaire à analyser:",key="c2",value=st.session_state["c2"])
+    inputcommentaire=st.text_input("Commentaire à analyser:",key="c1")#,value=st.session_state["c1"])
+    inputcommentaire_2=st.text_input("2ème commentaire à analyser:",key="c2")#,value=st.session_state["c2"])
 
     col1, col2 = st.columns(2)  # Divise l'espace en 2 colonnes
     col2.button("Inverser",on_click=permuter)
