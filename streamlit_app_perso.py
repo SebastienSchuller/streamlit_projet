@@ -265,6 +265,7 @@ elif page=="Feature Engineering":
 
     # zone de saisie du commentaire à tester
     inputcommentaire=st.text_input("Commentaire à analyser:","Super produit !")
+    inputcommentaire_2=st.text_input("2ème commentaire à analyser:","c est des voleur j ais commande des albums photo et jamais recus les codes , conclusion e dans l os , merci voleur prive ,")
 
     # bouton de validation
     if st.button("Simuler les Feature Engineering"):
@@ -272,15 +273,18 @@ elif page=="Feature Engineering":
 
         # mise en minuscule, on garde le commentaire initial dans inputcommentaire
         commentaire=inputcommentaire.lower()
+        commentaire_2=inputcommentaire_2.lower()
 
         # suppression des chiffres
         import re
         numbers=re.compile('[0-9]+')
         commentaire=numbers.sub('',commentaire)
+        commentaire_2=numbers.sub('',commentaire_2)
  
         # suppression des smileys
         import emoji
         commentaire= emoji.demojize(commentaire, language="fr")
+        commentaire_2= emoji.demojize(commentaire_2, language="fr")
 
         # Stemming
         from nltk.stem.snowball import FrenchStemmer
@@ -311,6 +315,8 @@ elif page=="Feature Engineering":
               
             commentaire_spacy_sm=lemmatisation_spacy(commentaire,nlp_sm)    
             commentaire_spacy_lg=lemmatisation_spacy(commentaire,nlp_lg)  
+
+            commentaire_spacy_sm_2=lemmatisation_spacy(commentaire_2,nlp_sm) 
         
 
         dict_feature={
@@ -341,8 +347,8 @@ elif page=="Feature Engineering":
         stop_words.update(['a','j\'ai','car','a','c\'est','veepee','showroom'])
 
         BoW=CountVectorizer(strip_accents='unicode',stop_words=list(stop_words)) # on supprime les accents
-        BoW.fit([commentaire_spacy_sm])
-        result_bow=BoW.transform([commentaire_spacy_sm])
+        BoW.fit([commentaire_spacy_sm,commentaire_spacy_sm_2])
+        result_bow=BoW.transform([commentaire_spacy_sm,commentaire_spacy_sm_2])
         st.write("### BoW")
         st.dataframe(pd.DataFrame(result_bow.todense(),columns=BoW.get_feature_names_out()),hide_index=True)
 
@@ -350,15 +356,15 @@ elif page=="Feature Engineering":
         from sklearn.feature_extraction.text import TfidfVectorizer 
 
         tfidf=TfidfVectorizer(strip_accents='unicode',stop_words=list(stop_words)) # on supprime les accents
-        tfidf.fit([commentaire_spacy_sm])
-        result_tfidf=tfidf.transform([commentaire_spacy_sm])
+        tfidf.fit([commentaire_spacy_sm,commentaire_spacy_sm_2])
+        result_tfidf=tfidf.transform([commentaire_spacy_sm,commentaire_spacy_sm_2])
         st.write("### TF-IDF")
         st.dataframe(pd.DataFrame(result_tfidf.todense(),columns=tfidf.get_feature_names_out()),hide_index=True)
 
         # TFIDF et ngrames
         tfidf=TfidfVectorizer(strip_accents='unicode',stop_words=list(stop_words),ngram_range=(1,2)) # on supprime les accents
-        tfidf.fit([commentaire_spacy_sm])
-        result_tfidf=tfidf.transform([commentaire_spacy_sm])
+        tfidf.fit([commentaire_spacy_sm,commentaire_spacy_sm_2])
+        result_tfidf=tfidf.transform([commentaire_spacy_sm,commentaire_spacy_sm_2])
         st.write("### TF-IDF (ngrames=(1,2))")
         st.dataframe(pd.DataFrame(result_tfidf.todense(),columns=tfidf.get_feature_names_out()),hide_index=True)
 
@@ -367,10 +373,15 @@ elif page=="Feature Engineering":
         tiktoken=tiktoken.get_encoding("cl100k_base")
         tiktoken_tokens = tiktoken.encode(commentaire_spacy_sm)
         st.write("### Tiktoken")
+
+        # colonne pour le 2eme vecteur ?
+
         st.write(tiktoken_tokens)
 
         dict_tiktoken={}
         for i, token in enumerate(tiktoken_tokens):
             dict_tiktoken[token]=tiktoken.decode([token])
             #st.write(f"Index {i}: Token ID {token} → '{tiktoken.decode([token])}'")
+
+        # colonne pour le 2eme vecteur ?
         st.write(dict_tiktoken)
