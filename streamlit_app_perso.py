@@ -289,9 +289,32 @@ elif page=="Simulation LLM":
     inputcommentaire=st.text_input("Commentaire à analyser:","Super produit !")
 
     st.write("## Prompt pour le LLM:")
-    prompt=st.text_area("Prompt:",value="Analyse le commentaire suivant et donne une note de 1 à 5 étoiles. Explique ta note et donne des mots clés associés au commentaire.",height=200)         
+    prompt=st.text_area("Prompt:",value="Analyse le commentaire suivant et donne une note de 1 à 5 étoiles. Explique ta note et donne des mots clés associés au commentaire.",height=100)         
+    
+    from pydantic import BaseModel, Field, create_model
+    from typing import List, get_args, get_origin, get_type_hints
+
+    class Eval_commentaire(BaseModel):
+        '''Commentaire évalué avec ton et mots clés'''
+        star: int = Field(description="Note du commentaire entre 1 et 5", ge=1, le=5)
+        ton: str = Field(description="Ton du message", list=["positif", "négatif", "neutre"])
+        keywords: List[str] = Field(..., description="Liste de mots clés associés au commentaire (5 mots maximum)")
+        topic: str = Field(description="Sujet du commentaire")
+
+    st.write("## Champs du Structured Output:")
+    # Liste des champs disponibles
+    
+    options = ["star", "ton", "keywords", "topic"]
+    cols = st.columns(len(options))  # Crée une colonne par option
+
+    selected_fields = []
+    for option in options:
+        if st.checkbox(option, key=option):
+            selected_fields.append(option)
+        
+    
     # bouton de validation
-    if st.button("Analyser"):
+    if st.button("Analyser et répondre au commentaire"):
         if mistral_api_key=="":
             st.write("## Veuillez saisir une clé API Mistral AI dans le popover en haut à gauche de l'écran.")
         else:
@@ -301,23 +324,29 @@ elif page=="Simulation LLM":
             st.write("Modèle: mistral-large-latest")
             st.write("Température: 0")
 
+            original_fields = Eval_commentaire.model_fields
+            original_types = get_type_hints(Eval_commentaire)
+
+
+            dynamic_fields = {
+            field: (
+                original_types[field],
+                original_fields[field].default if original_fields[field].default is not None else ...
+            )
+            for field in selected_fields
+         }
+
+            # Crée un nouveau modèle basé sur la sélection
+            CustomModel = create_model("CustomEval", **dynamic_fields)
+
             ### début partie LLM à vérifier
-            from pydantic import BaseModel, Field
-            from typing import List
             from langchain_mistralai import ChatMistralAI
             from langchain_core.prompts import ChatPromptTemplate   
 
-            class Eval_commentaire(BaseModel):
-                '''Commentaire évaluée avec ton et mots clés'''
-
-                star: int = Field(description="Note du commentaire entre 1 et 5",ge=1,le=5)
-                ton: str = Field(description="Ton du message",list=["positif","négatif","neutre"])
-                keywords: List[str] = Field(..., description="Liste de mots clés associés au commentaire (5 mots maximum)")
-                topic: str=Field(description="Sujet du commentaire")
 
             # LLM with function call
             llm = ChatMistralAI(model="mistral-large-latest",api_key=mistral_api_key,temperature=00)
-            structured_llm_evaluateur = llm.with_structured_output(Eval_commentaire)
+            structured_llm_evaluateur = llm.with_structured_output(CustomModel)#(Eval_commentaire)
             
             eval_prompt = ChatPromptTemplate.from_messages(
             [
@@ -334,17 +363,27 @@ elif page=="Simulation LLM":
                 return docs
             
             retour=eval(inputcommentaire)
+            st.write("## Résultat de l'évaluation du LLM:") 
+            st.write(retour)
 
-            st.write("### Note du commentaire:",retour.star)
-            st.markdown(afficher_etoiles(retour.star), unsafe_allow_html=True)
-            st.write("### Ton du commentaire:",retour.ton)  
-            st.write("### Mots clés associés au commentaire:",retour.keywords)
-            st.write("### Sujet du commentaire:",retour.topic)
+            for k in retour.model_dump().keys():
+                if k=="star":
+                    st.write("### Note du commentaire:",retour.star)
+                    st.markdown(afficher_etoiles(retour.star), unsafe_allow_html=True)
+                elif k=="ton":
+                    st.write("### Ton du commentaire:",retour.ton)  
+                elif k=="keywords":
+                    st.write("### Mots clés associés au commentaire:",retour.keywords)
+                elif k=="topic":
+                    st.write("### Sujet du commentaire:",retour.topic)
 
             ### fin partie LLM à vérifier
 
+            #### début partie réponse au commentaire
+            st.write("## Réponse au commentaire avec une approche few shot example:")
+    
+    
     st.divider()   
-    st.write("Approche structured output avec note, mots clés, thème. résumé ?")
     st.write("inclus une écriture de la réponse ?")
 
 
