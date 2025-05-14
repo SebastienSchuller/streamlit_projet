@@ -287,10 +287,63 @@ elif page=="Simulation LLM":
     st.write('## Saisssez un commentaire à analyser avec le LLM')
     # zone de saisie du commentaire à tester
     inputcommentaire=st.text_input("Commentaire à analyser:","Super produit !")
+
+    st.write("## Prompt pour le LLM:")
+    prompt=st.text_area("Prompt:",value="Analyse le commentaire suivant et donne une note de 1 à 5 étoiles. Explique ta note et donne des mots clés associés au commentaire.",height=200)         
     # bouton de validation
     if st.button("Analyser"):
-        st.divider()
-        
+        if mistral_api_key=="":
+            st.write("## Veuillez saisir une clé API Mistral AI dans le popover en haut à gauche de l'écran.")
+        else:
+            st.divider()
+
+            st.write("## Utilisation d'un modèle Mistral AI avec une structured output")
+            st.write("Modèle: mistral-large-latest")
+            st.write("Température: 0")
+
+            ### début partie LLM à vérifier
+            from pydantic import BaseModel, Field
+            from typing import List
+            from langchain_mistralai import ChatMistralAI
+            from langchain_core.prompts import ChatPromptTemplate   
+
+            class Eval_commentaire(BaseModel):
+                '''Commentaire évaluée avec ton et mots clés'''
+
+                star: int = Field(description="Note du commentaire entre 1 et 5",ge=1,le=5)
+                ton: str = Field(description="Ton du message",list=["positif","négatif","neutre"])
+                keywords: List[str] = Field(..., description="Liste de mots clés associés au commentaire (5 mots maximum)")
+                topic: str=Field(description="Sujet du commentaire")
+
+            # LLM with function call
+            llm = ChatMistralAI(model="mistral-large-latest",api_key=mistral_api_key,temperature=00)
+            structured_llm_evaluateur = llm.with_structured_output(Eval_commentaire)
+            
+            eval_prompt = ChatPromptTemplate.from_messages(
+            [
+                ("system", prompt),
+                ("human", "{query}"),
+            ]
+            )
+
+            retrieval_grader = eval_prompt | structured_llm_evaluateur
+
+            def eval(commentaire):
+                question="Evalue ce commentaire: "+commentaire
+                docs = retrieval_grader.invoke({"query": question})
+                return docs
+            
+            retour=eval(inputcommentaire)
+
+            st.write("### Note du commentaire:",retour.star)
+            st.markdown(afficher_etoiles(retour.star), unsafe_allow_html=True)
+            st.write("### Ton du commentaire:",retour.ton)  
+            st.write("### Mots clés associés au commentaire:",retour.keywords)
+            st.write("### Sujet du commentaire:",retour.topic)
+
+            ### fin partie LLM à vérifier
+
+    st.divider()   
     st.write("Approche structured output avec note, mots clés, thème. résumé ?")
     st.write("inclus une écriture de la réponse ?")
 
