@@ -480,7 +480,14 @@ elif page=="Simulation LLM":
             
             st.write(retour)
 
+            ## Réponse sans fewshot ?
+            def reponse_without_example(commentaire,prenom):
+                question="Répond à ce commentaire: "+ commentaire + ". Nom:" + str(prenom)
+                docs = structured_llm_evaluateur_with_example.invoke({"input": question})
+                return docs
+            retour=reponse_with_example(inputcommentaire,"")
 
+            t.write(retour)
 
 
 elif page=="Feature Engineering":
