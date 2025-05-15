@@ -372,7 +372,7 @@ elif page=="Simulation LLM":
             
             retour=eval(inputcommentaire)
             st.write("## Résultat de l'évaluation du LLM:") 
-            st.write(retour)
+            # st.write(retour)
 
             for k in retour.model_dump().keys():
                 if k=="star":
@@ -477,12 +477,13 @@ elif page=="Simulation LLM":
             import time
             time.sleep(5)
             retour=reponse_with_example(inputcommentaire,"")
-            
-            st.write(retour)
+            st.write("Prompt: Tu es un professionnel du service client après-vente, qui analyse et répond à des commentaires laissés par des clients suite à une commande.\n Tu t'inspires pour les réponses des exemples fournis le plus possible.")
+            st.write("Réponse générée:")
+            st.info(retour.reponse)
 
             ## Réponse sans fewshot ?
             st.write("## Réponse au commentaire sans l'approche few shot example:")
-
+            st.write("Prompt: Tu es un professionnel du service client après-vente, qui analyse et répond à des commentaires laissés par des clients suite à une commande.")
             structured_llm_without_example=llm.with_structured_output(Reponse_commentaire)
             # Prompt
             system = """Tu es un professionnel du service client après-vente, qui analyse et répond à des commentaires laissés par des clients suite à une commande.\n
@@ -504,7 +505,8 @@ elif page=="Simulation LLM":
             time.sleep(5)
             retour=reponse_without_example(inputcommentaire,"")
 
-            st.write(retour)
+            st.write("Réponse générée:")
+            st.info(retour.reponse)
 
 
 elif page=="Feature Engineering":
