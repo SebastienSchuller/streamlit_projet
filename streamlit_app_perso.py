@@ -434,6 +434,9 @@ elif page=="Simulation LLM":
                 'output': 'Bonjour , Un grand merci pour votre avis ! Bonne journée de la '
                             "part de toute l'équipe.Ayoub"}]
             
+            with st.expander("Visualiser les exemples de réponse fournies au LLM"):
+                st.dataframe(auto_examples)
+            
             # Création de la classe de sortie structurée
             class Reponse_commentaire(BaseModel):
                 '''Réponse à un commentaire'''
