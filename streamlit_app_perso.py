@@ -485,9 +485,10 @@ elif page=="Simulation LLM":
                 question="Répond à ce commentaire: "+ commentaire + ". Nom:" + str(prenom)
                 docs = structured_llm_evaluateur_with_example.invoke({"input": question})
                 return docs
+            time.sleep(5)
             retour=reponse_with_example(inputcommentaire,"")
 
-            t.write(retour)
+            st.write(retour)
 
 
 elif page=="Feature Engineering":
