@@ -353,7 +353,7 @@ elif page=="Simulation LLM":
 
 
             # LLM with function call
-            llm = ChatMistralAI(model="mistral-large-latest",api_key=mistral_api_key,temperature=00)
+            llm = ChatMistralAI(model="mistral-large-latest",api_key=mistral_api_key,temperature=temperature)
             structured_llm_evaluateur = llm.with_structured_output(CustomModel)#(Eval_commentaire)
             
             eval_prompt = ChatPromptTemplate.from_messages(
