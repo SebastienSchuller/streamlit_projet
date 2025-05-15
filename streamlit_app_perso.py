@@ -330,7 +330,7 @@ elif page=="Simulation LLM":
 
             st.write("## Utilisation d'un modèle Mistral AI avec une structured output")
             st.write("Modèle: mistral-large-latest")
-            st.write("Température: 0")
+            st.write("Température: "+temperature)
 
             original_fields = Eval_commentaire.model_fields
             original_types = get_type_hints(Eval_commentaire)
