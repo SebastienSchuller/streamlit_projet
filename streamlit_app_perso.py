@@ -444,9 +444,9 @@ elif page=="Simulation LLM":
 
             # Prompt
             system = """Tu es un professionnel du service client après-vente, qui analyse et répond à des commentaires laissés par des clients suite à une commande.\n
-                       
+                Tu t'inspires pour les réponses des exemples fournis le plus possible.       
                 """
-            #  Tu t'inspires pour les réponses des exemples fournis le plus possible.  
+   
 
             structured_llm_evaluateur_with_example = llm.with_structured_output(Reponse_commentaire)
 
@@ -483,9 +483,23 @@ elif page=="Simulation LLM":
             ## Réponse sans fewshot ?
             st.write("## Réponse au commentaire sans l'approche few shot example:")
 
+            structured_llm_without_example=llm.with_structured_output(Reponse_commentaire)
+            # Prompt
+            system = """Tu es un professionnel du service client après-vente, qui analyse et répond à des commentaires laissés par des clients suite à une commande.\n
+                """
+
+            eval_prompt = ChatPromptTemplate.from_messages(
+                [
+                    ("system", system),
+                    ("human", "{query}"),
+                ]
+            )
+
+            retrieval_grader_without_example = eval_prompt | structured_llm_evaluateur
+
             def reponse_without_example(commentaire,prenom):
                 question="Répond à ce commentaire: "+ commentaire + ". Nom:" + str(prenom)
-                docs = structured_llm_evaluateur_with_example.invoke({"input": question})
+                docs = retrieval_grader_without_example.invoke({"input": question})
                 return docs
             time.sleep(5)
             retour=reponse_without_example(inputcommentaire,"")
