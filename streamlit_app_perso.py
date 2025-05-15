@@ -289,7 +289,7 @@ elif page=="Simulation LLM":
     inputcommentaire=st.text_input("Commentaire à analyser:","Super produit !")
 
     st.write("## Prompt pour le LLM:")
-    prompt=st.text_area("Prompt:",value="Analyse le commentaire suivant et donne une note de 1 à 5 étoiles. Explique ta note et donne des mots clés associés au commentaire.",height=100)         
+    prompt=st.text_area("Prompt:",value="Analyse le commentaire suivant et donne une note de 1 à 5 étoiles. Explique ta note et donne des mots clés associés au commentaire.",height=68)         
     
     from pydantic import BaseModel, Field, create_model
     from typing import List, get_args, get_origin, get_type_hints
@@ -309,14 +309,14 @@ elif page=="Simulation LLM":
 
     selected_fields = []
     for option in options:
-        if st.checkbox(option, key=option):
+        if st.checkbox(option, key=option,value=True):
             selected_fields.append(option)
         
     
     # bouton de validation
     if st.button("Analyser et répondre au commentaire"):
         if mistral_api_key=="":
-            st.write("## Veuillez saisir une clé API Mistral AI dans le popover en haut à gauche de l'écran.")
+            st.error("Veuillez saisir une clé API Mistral AI dans le popover en haut à gauche de l'écran.")
         else:
             st.divider()
 
