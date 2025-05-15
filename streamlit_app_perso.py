@@ -311,7 +311,15 @@ elif page=="Simulation LLM":
     for option in options:
         if st.checkbox(option, key=option,value=True):
             selected_fields.append(option)
-        
+
+    st.write("## Température:") 
+    temperature = st.slider(
+        'Choisissez la température',
+        min_value=0.0,
+        max_value=1.0,
+        value=0.0,
+        step=0.05
+    )
     
     # bouton de validation
     if st.button("Analyser et répondre au commentaire"):
@@ -382,9 +390,7 @@ elif page=="Simulation LLM":
             #### début partie réponse au commentaire
             st.write("## Réponse au commentaire avec une approche few shot example:")
     
-    
-    st.divider()   
-    st.write("inclus une écriture de la réponse ?")
+
 
 
 
