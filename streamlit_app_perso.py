@@ -491,7 +491,7 @@ elif page=="Simulation LLM":
             eval_prompt = ChatPromptTemplate.from_messages(
                 [
                     ("system", system),
-                    ("human", "{query}"),
+                    ("human", "{input}"),
                 ]
             )
 
