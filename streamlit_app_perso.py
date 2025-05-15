@@ -347,7 +347,6 @@ elif page=="Simulation LLM":
             # Crée un nouveau modèle basé sur la sélection
             CustomModel = create_model("CustomEval", **dynamic_fields)
 
-            ### début partie LLM à vérifier
             from langchain_mistralai import ChatMistralAI
             from langchain_core.prompts import ChatPromptTemplate   
             from langchain.prompts import FewShotPromptTemplate
@@ -385,8 +384,6 @@ elif page=="Simulation LLM":
                     st.write("### Mots clés associés au commentaire:",retour.keywords)
                 elif k=="topic":
                     st.write("### Sujet du commentaire:",retour.topic)
-
-            ### fin partie LLM à vérifier
 
             #### début partie réponse au commentaire
             st.write("## Réponse au commentaire avec une approche few shot example:")
@@ -444,9 +441,10 @@ elif page=="Simulation LLM":
 
             # Prompt
             system = """Tu es un professionnel du service client après-vente, qui analyse et répond à des commentaires laissés par des clients suite à une commande.\n
-                        Tu t'inspires pour les réponses des exemples fournis le plus possible. 
+                       
                 """
-
+            #  Tu t'inspires pour les réponses des exemples fournis le plus possible.  
+            
             structured_llm_evaluateur_with_example = llm.with_structured_output(Reponse_commentaire)
 
             examples=auto_examples
