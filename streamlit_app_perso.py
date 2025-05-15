@@ -444,7 +444,7 @@ elif page=="Simulation LLM":
                        
                 """
             #  Tu t'inspires pour les réponses des exemples fournis le plus possible.  
-            
+
             structured_llm_evaluateur_with_example = llm.with_structured_output(Reponse_commentaire)
 
             examples=auto_examples
@@ -470,6 +470,9 @@ elif page=="Simulation LLM":
                 docs = retrieval_grader_with_example.invoke({"input": question})
                 return docs
             
+            # sleep pour gérer les limitations de l'API free Mistral AI
+            import time
+            time.sleep(5)
             retour=reponse_with_example(inputcommentaire,"")
             
             st.write(retour)
