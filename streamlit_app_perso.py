@@ -495,7 +495,7 @@ elif page=="Simulation LLM":
                 ]
             )
 
-            retrieval_grader_without_example = eval_prompt | structured_llm_evaluateur
+            retrieval_grader_without_example = eval_prompt | structured_llm_without_example
 
             def reponse_without_example(commentaire,prenom):
                 question="Répond à ce commentaire: "+ commentaire + ". Nom:" + str(prenom)
