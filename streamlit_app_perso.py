@@ -4,6 +4,9 @@ st.set_page_config(page_title="DS - Orange - Supply Chain", page_icon="🚀",lay
 
 st.title("Analyse des commentaires clients")
 
+
+commentaire_defaut='très bonnes expériences avec showroomprivé : sérieux , choix , qualité , prix et rapidité de livraison.Très satisfaite aussi du service client : retours et remboursements .'
+
 # ETOILE
 def afficher_etoiles(note: float, max_etoiles: int = 5):
     """
@@ -52,7 +55,7 @@ elif page=="Simulation LGBM + shap":
     st.write('## Saisssez un commentaire à analyser avec le modèle LGBM')
 
     # zone de saisie du commentaire à tester
-    inputcommentaire=st.text_input("Commentaire à analyser:","Super produit !")
+    inputcommentaire=st.text_input("Commentaire à analyser:",commentaire_defaut)
 
     # bouton de validation
     if st.button("Analyser"):
@@ -144,7 +147,7 @@ elif page=="Simulation LGBM + shap":
 elif page=="Simulation Camembert + Captum":
     st.write('## Saisssez un commentaire à analyser avec le modèle Camembert')
     # zone de saisie du commentaire à tester
-    inputcommentaire=st.text_input("Commentaire à analyser:","Super produit !")
+    inputcommentaire=st.text_input("Commentaire à analyser:",commentaire_defaut)
     fenetre_occ_max=st.slider("Taille max de la fenêtre d'occlusion (! au temps de calcul):",1,20,10,1,None,None,"De 1 à ...")
     # bouton de validation
     if st.button("Analyser"):
@@ -286,7 +289,7 @@ elif page=="Simulation LLM":
 
     st.write('## Saisssez un commentaire à analyser avec le LLM')
     # zone de saisie du commentaire à tester
-    inputcommentaire=st.text_input("Commentaire à analyser:","Super produit !")
+    inputcommentaire=st.text_input("Commentaire à analyser:",commentaire_defaut)
 
     st.write("## Prompt pour le LLM:")
     prompt=st.text_area("Prompt:",value="Analyse le commentaire suivant et donne une note de 1 à 5 étoiles. Explique ta note et donne des mots clés associés au commentaire.",height=68)         
@@ -515,7 +518,7 @@ elif page=="Feature Engineering":
 
     # Initialisation des valeurs si elles n'existent pas encore
     if "c1" not in st.session_state:
-        st.session_state["c1"] = "Super produit !"
+        st.session_state["c1"] = commentaire_defaut
     if "c2" not in st.session_state:
         st.session_state["c2"] = "c est des voleur j ais commande des albums photo et jamais recus les codes , conclusion e dans l os , merci voleur prive ,"
 
