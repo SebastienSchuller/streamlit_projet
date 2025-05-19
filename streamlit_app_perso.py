@@ -292,7 +292,7 @@ elif page=="Simulation LLM":
     inputcommentaire=st.text_input("Commentaire à analyser:",commentaire_defaut)
 
     st.write("## Prompt pour le LLM:")
-    prompt=st.text_area("Prompt:",value="Analyse le commentaire suivant et donne une note de 1 à 5 étoiles. Explique ta note et donne des mots clés associés au commentaire.",height=68)         
+    prompt=st.text_area("Prompt:",value="Analyse le commentaire suivant et donne une note de 1 à 5 étoiles. Explique ta note et donne des mots clés associés au commentaire. (5 maximum)",height=68)         
     
     from pydantic import BaseModel, Field, create_model
     from typing import List, get_args, get_origin, get_type_hints
