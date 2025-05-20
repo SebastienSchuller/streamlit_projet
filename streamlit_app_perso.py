@@ -52,36 +52,7 @@ PAGES = OrderedDict(
     ]
 )
 
-# Structure des pages
-# st.sidebar.title("Sommaire")
 # pages=["Présentation du projet","Exploration", "Feature Engineering", "DataVisualisation", "Performance des modèles", "Simulation LGBM + shap", "Simulation Camembert + Captum","Simulation LLM"]
-# page=st.sidebar.radio("Aller vers:", pages)
-# st.sidebar.divider()
-
-# if page=="Présentation du projet":
-#     st.write("Présentation du projet")
-
-# elif page=="Exploration":
-#     st.write("Exploration des données")
-
-# elif page=="DataVisualisation":    
-#     st.write("Possibilité d'utiliser streamlit-folium")
-
-# elif page=="Simulation LGBM + shap":
-    
-
-# elif page=="Simulation Camembert + Captum":
-    
-
-# elif page=="Performance des modèles":
-#     st.write("Comparaison sur un jeu de xx commentaire de l'acc / aobo de LGBM, Camembert réentrainé, un LLM éventuellement")
-#     st.write("avec option pour échantillon stratifié ?")
-#     st.write("champ mot de passe pour mettre une clé LLM")
-
-# elif page=="Simulation LLM":
-
-# elif page=="Feature Engineering":
- 
 
 def run():
     # st.sidebar.image(
