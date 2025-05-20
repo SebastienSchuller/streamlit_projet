@@ -1,14 +1,9 @@
 import streamlit as st
 
-
-title = "My Awesome DataScientest project."
-sidebar_name = "Présentation"
+sidebar_name = "Présentation du projet"
 
 
 def run():
-
-    st.title(title)
-    # st.text('')
 
     st.markdown("---")
 

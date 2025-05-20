@@ -24,7 +24,7 @@ PAGES = OrderedDict(
     ]
 )
 
-# pages=["Présentation du projet","Exploration", "Feature Engineering", "DataVisualisation", "Performance des modèles", "Simulation LGBM + shap", "Simulation Camembert + Captum","Simulation LLM"]
+# pages à ajouter: =["Présentation du projet","Exploration", "Feature Engineering", "DataVisualisation", "Performance des modèles", "Simulation LGBM + shap", "Simulation Camembert + Captum","Simulation LLM"]
 
 def run():
     # logo orange et DS ?
@@ -32,7 +32,7 @@ def run():
     #     "https://dst-studio-template.s3.eu-west-3.amazonaws.com/logo-datascientest.png",
     #     width=200,
     #)
-    tab_name = st.sidebar.radio("", list(PAGES.keys()), 0)
+    tab_name = st.sidebar.radio("Menu", list(PAGES.keys()), 0)
     st.sidebar.divider()
 
     st.sidebar.write("Sébastien S")
