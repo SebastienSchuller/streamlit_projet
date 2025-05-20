@@ -5,7 +5,6 @@ sidebar_name = "Simulation LLM Mistral AI"
 
 
 def run():
-    st.write("toto")
     commentaire_defaut='très bonnes expériences avec showroomprivé : sérieux , choix , qualité , prix et rapidité de livraison.Très satisfaite aussi du service client : retours et remboursements .'
 
     if "mistral_api_key" not in st.session_state:
