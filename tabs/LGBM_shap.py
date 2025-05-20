@@ -1,5 +1,5 @@
 import streamlit as st
-
+from func import afficher_etoiles
 
 sidebar_name = "Simulation LGBM + shap"
 
@@ -74,7 +74,7 @@ def run():
 
         
         # Affichage de la note sous forme d'étoiles
-        #st.markdown(afficher_etoiles(y_test[0]), unsafe_allow_html=True)
+        st.markdown(afficher_etoiles(y_test[0]), unsafe_allow_html=True)
 
         # Interprétabilité avec shap ?
         with st.spinner("Calcul de l'interprétabilité shap..."):

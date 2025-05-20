@@ -1,5 +1,5 @@
 import streamlit as st
-
+from func import afficher_etoiles
 
 sidebar_name = "Simulation Camembert + Captum"
 
@@ -52,7 +52,7 @@ def run():
                 # st.write(predictions)
                 st.write("Notation du modèle Camembert réentrainé:",predictions.to("cpu").numpy()[0] + 1)  # Revenir à la notation initiale (1-5)
 
-                #st.markdown(afficher_etoiles(predictions.to("cpu").numpy()[0] + 1), unsafe_allow_html=True)
+                st.markdown(afficher_etoiles(predictions.to("cpu").numpy()[0] + 1), unsafe_allow_html=True)
 
         # interprétabilité par Occlusion avec captum
         from captum.attr import Occlusion

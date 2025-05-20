@@ -1,5 +1,5 @@
 import streamlit as st
-
+from func import afficher_etoiles
 
 sidebar_name = "Simulation LLM Mistral AI"
 
@@ -109,7 +109,7 @@ def run():
             for k in retour.model_dump().keys():
                 if k=="star":
                     st.write("### Note du commentaire:",retour.star)
-                    #st.markdown(afficher_etoiles(retour.star), unsafe_allow_html=True)
+                    st.markdown(afficher_etoiles(retour.star), unsafe_allow_html=True)
                 elif k=="ton":
                     st.write("### Ton du commentaire:",retour.ton)  
                 elif k=="keywords":
