@@ -1,7 +1,16 @@
 import streamlit as st
 from func import afficher_etoiles
+from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
 sidebar_name = "Simulation Camembert + Captum"
+
+@st.cache_resource
+def load_model(model_path):
+    return AutoModelForSequenceClassification.from_pretrained(model_path)
+
+@st.cache_resource
+def load_tokenizer(model_path):
+    return AutoTokenizer.from_pretrained(model_path,use_fast=False,local_files_only=True)
 
 
 def run():
@@ -21,7 +30,7 @@ def run():
         # chargement du tokenizer et du modèle
         with st.spinner("Chargement du modèle..."):
 
-            from transformers import AutoModelForSequenceClassification, AutoTokenizer
+            
             import torch
 
             import os
@@ -33,14 +42,16 @@ def run():
                 #st.write("Exécution locale")
                 MODE = "local"
                 model_path='./../_camembert/'
-                
+            
 
             # chargement du tokenizer    
-            tokenizer = AutoTokenizer.from_pretrained(model_path,use_fast=False,local_files_only=True)
+            #tokenizer = AutoTokenizer.from_pretrained(model_path,use_fast=False,local_files_only=True)
+            tokenizer=load_tokenizer(model_path)
             # tokenizer = AutoTokenizer.from_pretrained(model_path,use_fast=False)
 
             # chargement du modèle
-            model = AutoModelForSequenceClassification.from_pretrained(model_path)
+            # model = AutoModelForSequenceClassification.from_pretrained(model_path)
+            model=load_model(model_path)
 
         new_comments = inputcommentaire#[inputcommentaire]
         
