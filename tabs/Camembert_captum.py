@@ -4,11 +4,11 @@ from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
 sidebar_name = "Simulation Camembert + Captum"
 
-@st.cache_resource
+@st.cache_resource(ttl=86400)
 def load_model(model_path):
     return AutoModelForSequenceClassification.from_pretrained(model_path)
 
-@st.cache_resource
+@st.cache_resource(ttl=86400)
 def load_tokenizer(model_path):
     return AutoTokenizer.from_pretrained(model_path,use_fast=False,local_files_only=True)
 
