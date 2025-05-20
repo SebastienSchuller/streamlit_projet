@@ -7,8 +7,12 @@ sidebar_name = "Simulation Camembert + Captum"
 def run():
     st.write('## Saisssez un commentaire à analyser avec le modèle Camembert')
     commentaire_defaut='très bonnes expériences avec showroomprivé : sérieux , choix , qualité , prix et rapidité de livraison.Très satisfaite aussi du service client : retours et remboursements .'
+
+    if "c1" not in st.session_state:
+        st.session_state["c1"] = commentaire_defaut
+
     # zone de saisie du commentaire à tester
-    inputcommentaire=st.text_input("Commentaire à analyser:",commentaire_defaut)
+    inputcommentaire=st.text_input("Commentaire à analyser:",key="c1")#commentaire_defaut)
     fenetre_occ_max=st.slider("Taille max de la fenêtre d'occlusion (! au temps de calcul):",1,20,10,1,None,None,"De 1 à ...")
     # bouton de validation
     if st.button("Analyser"):

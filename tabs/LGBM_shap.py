@@ -8,9 +8,12 @@ def run():
     st.write('## Saisssez un commentaire à analyser avec le modèle LGBM')
 
     commentaire_defaut='très bonnes expériences avec showroomprivé : sérieux , choix , qualité , prix et rapidité de livraison.Très satisfaite aussi du service client : retours et remboursements .'
-    
+
+    if "c1" not in st.session_state:
+        st.session_state["c1"] = commentaire_defaut
+
     # zone de saisie du commentaire à tester
-    inputcommentaire=st.text_input("Commentaire à analyser:",commentaire_defaut)
+    inputcommentaire=st.text_input("Commentaire à analyser:",key="c1")#commentaire_defaut)
 
     # bouton de validation
     if st.button("Analyser"):

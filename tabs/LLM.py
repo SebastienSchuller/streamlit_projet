@@ -7,6 +7,11 @@ sidebar_name = "Simulation LLM Mistral AI"
 def run():
     commentaire_defaut='très bonnes expériences avec showroomprivé : sérieux , choix , qualité , prix et rapidité de livraison.Très satisfaite aussi du service client : retours et remboursements .'
 
+
+    if "c1" not in st.session_state:
+        st.session_state["c1"] = commentaire_defaut
+
+
     if "mistral_api_key" not in st.session_state:
         st.session_state["mistral_api_key"] = ""
 
@@ -18,7 +23,7 @@ def run():
 
     st.write('## Saisssez un commentaire à analyser avec le LLM')
     # zone de saisie du commentaire à tester
-    inputcommentaire=st.text_input("Commentaire à analyser:",commentaire_defaut)
+    inputcommentaire=st.text_input("Commentaire à analyser:",key="c1")#commentaire_defaut)
 
     st.write("## Prompt pour le LLM:")
     prompt=st.text_area("Prompt:",value="Analyse le commentaire suivant et donne une note de 1 à 5 étoiles. Explique ta note et donne des mots clés associés au commentaire. (5 maximum)",height=68)         
