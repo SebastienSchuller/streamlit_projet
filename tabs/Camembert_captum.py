@@ -22,7 +22,7 @@ def run():
 
     # zone de saisie du commentaire à tester
     inputcommentaire=st.text_input("Commentaire à analyser:",key="c1")#commentaire_defaut)
-    fenetre_occ_max=st.slider("Taille max de la fenêtre d'occlusion (! au temps de calcul):",1,20,10,1,None,None,"De 1 à ...")
+    fenetre_occ_max=st.slider("Taille max de la fenêtre d'occlusion (! au temps de calcul):",1,20,3,1,None,None,"De 1 à ...")
     # bouton de validation
     if st.button("Analyser"):
         st.divider()
