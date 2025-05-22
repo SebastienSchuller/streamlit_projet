@@ -110,8 +110,10 @@ def run():
             shap.force_plot(expected_value,shap_value_ind,X_pred,feature_names,matplotlib=True)
             st.pyplot(plt.gcf())
 
+
         for i in range(5):
             shap_plot(explainer.expected_value[i],shap_values_pipe[individu,...,i],X_pred_vector,feature_names=feature_names,matplotlib=True)
+
             # ancienne version sans cache
             # st.write(f"### Star: {i+1}")
             # fig = plt.figure()
