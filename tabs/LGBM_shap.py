@@ -59,9 +59,11 @@ def run():
         #st.write("Vecteur après tfidf:",vector_commentaire.shape)
 
         # min max sur la longueur
+        
         from sklearn.preprocessing import MinMaxScaler
         scaler_length=joblib.load("./models/lgbm/scaler.pkl")
-        comm_length=scaler_length.transform(np.array(comm_length).reshape(1,-1))
+        #comm_length=scaler_length.transform(np.array(comm_length).reshape(1,-1))
+        comm_length=scaler_length.transform(pd.DataFrame(np.array(comm_length).reshape(1,-1), columns=["Commentaire_len"])) #avec nom de feature pour éviter le warning
         #st.write("Vecteur longueur:",comm_length.shape)
 
         X_pred_vector=pd.DataFrame(np.hstack((vector_commentaire.todense(),comm_length)))
