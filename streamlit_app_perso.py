@@ -13,6 +13,7 @@ st.title("Analyse des commentaires clients")
 commentaire_defaut='très bonnes expériences avec showroomprivé : sérieux , choix , qualité , prix et rapidité de livraison.Très satisfaite aussi du service client : retours et remboursements .'
 
 from tabs import intro,LGBM_shap,Camembert_captum,LLM,Feature
+# import de camembert prend du temps
 
 PAGES = OrderedDict(
     [
