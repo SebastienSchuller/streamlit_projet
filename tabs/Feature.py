@@ -62,11 +62,22 @@ def run():
         mots_lemm = [wordnet_lemmatizer.lemmatize(mot) for mot in mots]
         commentaire_lemm = ' '.join(mots_lemm)
 
+        # fonction en cache
+        import spacy
+        @st.cache_resource
+        def spacy_load_sm():
+            return spacy.load('fr_core_news_sm')
+
+        @st.cache_resource
+        def spacy_load_lg():
+            return spacy.load('fr_core_news_lg')
+        
         # Lemmatisation avec Spacy
         with st.spinner("Calcul des features..."):
-            import spacy
-            nlp_sm=spacy.load('fr_core_news_sm')
-            nlp_lg=spacy.load('fr_core_news_lg')
+            
+            nlp_sm=spacy_load_sm()
+            nlp_lg=spacy_load_lg()
+            #spacy.load('fr_core_news_lg')
 
             def lemmatisation_spacy(texte,model_spacy) :
                 doc = model_spacy(texte)
@@ -103,6 +114,17 @@ def run():
         
         stop_words=set(stopwords.words('french'))
         stop_words.update(['a','j\'ai','car','a','c\'est','veepee','showroom'])
+
+        import unicodedata
+
+        def normalize(text):
+            text = text.lower()
+            text = unicodedata.normalize('NFD', text)
+            text = ''.join([c for c in text if unicodedata.category(c) != 'Mn'])  # enlève les accents
+            return text
+
+        # Appliquer la normalisation aux stop words
+        stop_words = [normalize(w) for w in stop_words]
 
         BoW=CountVectorizer(strip_accents='unicode',stop_words=list(stop_words)) # on supprime les accents
         BoW.fit([commentaire_spacy_sm,commentaire_spacy_sm_2])
