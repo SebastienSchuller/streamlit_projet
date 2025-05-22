@@ -69,7 +69,12 @@ def run():
 
         # chargement du modèle et de ses paramètres
         from lightgbm import LGBMClassifier
-        model=joblib.load("./models/lgbm/lgbm.pkl")
+
+        @st.cache_resource(ttl=86400)
+        def load_model_lgbm():
+            return joblib.load("./models/lgbm/lgbm.pkl")
+
+        model=load_model_lgbm() #joblib.load("./models/lgbm/lgbm.pkl")
 
         y_test=model.predict(X_pred_vector)
         st.write("Le modèle LGBM prédit une note de:",y_test[0],"pour ce commentaire.")
