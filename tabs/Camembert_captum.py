@@ -16,7 +16,7 @@ def load_tokenizer(model_path):
 
 
 def run():
-    st.write('## Saisssez un commentaire à analyser avec le modèle Camembert')
+    st.write('## Sasissez un commentaire à analyser avec le modèle Camembert')
     commentaire_defaut='très bonnes expériences avec showroomprivé : sérieux , choix , qualité , prix et rapidité de livraison.Très satisfaite aussi du service client : retours et remboursements .'
 
     if "c1" not in st.session_state:
