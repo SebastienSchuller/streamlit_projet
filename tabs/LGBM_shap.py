@@ -6,6 +6,11 @@ sidebar_name = "Simulation LGBM + shap"
 
 def run():
     st.write('## Saisssez un commentaire à analyser avec le modèle LGBM')
+    st.write("### Features en entrée du modèle:")
+    st.write("- Commentaire (lemmatisation spacy fr_core_news_sm, vecteur tf-idf avec stopwords)")
+    st.write("- Longueur du commentaire (normalisée avec MinMaxScaler)")
+
+    # commentaire par défaut
 
     commentaire_defaut='très bonnes expériences avec showroomprivé : sérieux , choix , qualité , prix et rapidité de livraison.Très satisfaite aussi du service client : retours et remboursements .'
 
