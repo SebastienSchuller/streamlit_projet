@@ -12,7 +12,7 @@ def load_model(model_path):
 @st.cache_resource(ttl=86400)
 def load_tokenizer(model_path):
     from transformers import AutoTokenizer
-    return AutoTokenizer.from_pretrained(model_path,use_fast=False,local_files_only=True)
+    return AutoTokenizer.from_pretrained(model_path,use_fast=False)#,local_files_only=True)
 
 
 def run():
