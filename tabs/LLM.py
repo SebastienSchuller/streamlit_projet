@@ -212,7 +212,8 @@ def run():
             
             # sleep pour gérer les limitations de l'API free Mistral AI
             import time
-            time.sleep(5)
+            with st.spinner("Attente 5s pour le LLM..."):
+                time.sleep(5)
             retour=reponse_with_example(inputcommentaire,"")
             st.write("Prompt: Tu es un professionnel du service client après-vente, qui analyse et répond à des commentaires laissés par des clients suite à une commande.\n Tu t'inspires pour les réponses des exemples fournis le plus possible.")
             st.write("Réponse générée:")
@@ -239,7 +240,8 @@ def run():
                 question="Répond à ce commentaire: "+ commentaire + ". Nom:" + str(prenom)
                 docs = retrieval_grader_without_example.invoke({"input": question})
                 return docs
-            time.sleep(5)
+            with st.spinner("Attente 5s pour le LLM..."):
+                time.sleep(5)
             retour=reponse_without_example(inputcommentaire,"")
 
             st.write("Réponse générée:")
