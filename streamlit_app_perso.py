@@ -1,6 +1,10 @@
 import streamlit as st
 from collections import OrderedDict
 
+# filtre les warnings
+import warnings
+warnings.filterwarnings('ignore')
+
 st.set_page_config(page_title="DS - Orange - Supply Chain", page_icon="🚀",layout="wide")
 
 with open("style.css", "r") as f:

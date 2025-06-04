@@ -15,11 +15,19 @@ def run():
     if "mistral_api_key" not in st.session_state:
         st.session_state["mistral_api_key"] = ""
 
+    if "proxy_config" not in st.session_state:
+        st.session_state["proxy_config"] = ""
+        
     with st.popover("Paramètres LLM"):
         st.markdown("Saisissez ici une clé pour l'API de Mistral AI.")
         mistral_api_key = st.text_input("Mistral AI API Key",type='password',value=st.session_state["mistral_api_key"])
         if mistral_api_key != st.session_state["mistral_api_key"]:
             st.session_state["mistral_api_key"] = mistral_api_key
+
+        st.markdown("Saisissez ici une configuration de proxy si nécessaire.")
+        proxy_config = st.text_input("Proxy configuration",value=st.session_state["proxy_config"])
+        if proxy_config != st.session_state["proxy_config"]:
+            st.session_state["proxy_config"] = proxy_config
 
     st.write('## Saisssez un commentaire à analyser avec le LLM')
     # zone de saisie du commentaire à tester
