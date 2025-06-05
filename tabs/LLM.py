@@ -1,5 +1,6 @@
 import streamlit as st
 from func import afficher_etoiles
+import os 
 
 sidebar_name = "Simulation LLM Mistral AI"
 
@@ -71,6 +72,22 @@ def run():
         if mistral_api_key=="":
             st.error("Veuillez saisir une clé API Mistral AI dans le popover en haut à gauche de l'écran.")
         else:
+
+            # gestion du proxy
+            if proxy_config=="":
+                # pas de proxy
+                if "HTTPS_PROXY" in os.environ:
+                    del os.environ["HTTPS_PROXY"]
+                if "HTTP_PROXY" in os.environ:
+                    del os.environ["HTTP_PROXY"]
+                if "GRPC_PROXY" in os.environ:
+                    del os.environ["GRPC_PROXY"]          
+            else:
+                # proxy
+                os.environ["HTTPS_PROXY"] = proxy_config
+                os.environ["HTTP_PROXY"] = proxy_config
+                os.environ["GRPC_PROXY"] = proxy_config
+
             st.divider()
 
             st.write("## Utilisation d'un modèle Mistral AI avec une structured output")
