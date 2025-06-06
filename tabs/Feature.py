@@ -129,7 +129,7 @@ def run():
         BoW=CountVectorizer(strip_accents='unicode',stop_words=list(stop_words)) # on supprime les accents
         BoW.fit([commentaire_spacy_sm,commentaire_spacy_sm_2])
         result_bow=BoW.transform([commentaire_spacy_sm,commentaire_spacy_sm_2])
-        st.write("### BoW")
+        st.write("### BoW - Représentation creuse")
         st.dataframe(pd.DataFrame(result_bow.todense(),columns=BoW.get_feature_names_out()),hide_index=True)
 
         # TFIDF
@@ -138,14 +138,14 @@ def run():
         tfidf=TfidfVectorizer(strip_accents='unicode',stop_words=list(stop_words)) # on supprime les accents
         tfidf.fit([commentaire_spacy_sm,commentaire_spacy_sm_2])
         result_tfidf=tfidf.transform([commentaire_spacy_sm,commentaire_spacy_sm_2])
-        st.write("### TF-IDF")
+        st.write("### TF-IDF - Représentation creuse")
         st.dataframe(pd.DataFrame(result_tfidf.todense(),columns=tfidf.get_feature_names_out()),hide_index=True)
 
         # TFIDF et ngrames
         tfidf=TfidfVectorizer(strip_accents='unicode',stop_words=list(stop_words),ngram_range=(1,2)) # on supprime les accents
         tfidf.fit([commentaire_spacy_sm,commentaire_spacy_sm_2])
         result_tfidf=tfidf.transform([commentaire_spacy_sm,commentaire_spacy_sm_2])
-        st.write("### TF-IDF (ngrames=(1,2))")
+        st.write("### TF-IDF (ngrames=(1,2))  - Représentation creuse")
         st.dataframe(pd.DataFrame(result_tfidf.todense(),columns=tfidf.get_feature_names_out()),hide_index=True)
 
         # Tiktoken
@@ -153,7 +153,7 @@ def run():
         tiktoken=tiktoken.get_encoding("cl100k_base")
         tiktoken_tokens = tiktoken.encode(commentaire_spacy_sm)
         tiktoken_tokens_2=tiktoken.encode(commentaire_spacy_sm_2)
-        st.write("### Tiktoken")
+        st.write("### Tiktoken - Tokenisation selon un vocabulaire fixe")
 
         #col1,col2=st.columns(2)
         #col1.write(tiktoken_tokens)
