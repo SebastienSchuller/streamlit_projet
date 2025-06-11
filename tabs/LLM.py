@@ -30,7 +30,7 @@ def run():
         if proxy_config != st.session_state["proxy_config"]:
             st.session_state["proxy_config"] = proxy_config
 
-    st.write('## Saisssez un commentaire à analyser avec le LLM')
+    st.write('## Saisissez un commentaire à analyser avec le LLM')
     # zone de saisie du commentaire à tester
     inputcommentaire=st.text_input("Commentaire à analyser:",key="c1")#commentaire_defaut)
 

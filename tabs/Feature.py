@@ -6,7 +6,7 @@ sidebar_name = "Feature Engineering"
 
 def run():
     commentaire_defaut='très bonnes expériences avec showroomprivé : sérieux , choix , qualité , prix et rapidité de livraison.Très satisfaite aussi du service client : retours et remboursements .'
-    st.write('## Saissez un commentaire:')
+    st.write('## Saisissez un commentaire:')
 
     # Initialisation des valeurs si elles n'existent pas encore
     if "c1" not in st.session_state:

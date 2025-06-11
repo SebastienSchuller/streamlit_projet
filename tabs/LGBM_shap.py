@@ -5,7 +5,7 @@ sidebar_name = "Simulation LGBM + shap"
 
 
 def run():
-    st.write('## Saisssez un commentaire à analyser avec le modèle LGBM')
+    st.write('## Saisisssez un commentaire à analyser avec le modèle LGBM')
     st.write("### Features en entrée du modèle:")
     st.write("- Commentaire (lemmatisation spacy fr_core_news_sm, vecteur tf-idf avec stopwords)")
     st.write("- Longueur du commentaire (normalisée avec MinMaxScaler)")
