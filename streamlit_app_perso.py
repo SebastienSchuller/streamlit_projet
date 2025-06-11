@@ -36,7 +36,7 @@ def run():
     tab_name = st.sidebar.radio("Menu", list(PAGES.keys()), 0)
     st.sidebar.divider()
 
-    st.sidebar.write("Mariem A")
+    st.sidebar.write("Mariem A\ntest")
     st.sidebar.write("Valérie GT")
     st.sidebar.write("Sana N")
     st.sidebar.write("Sébastien S")
