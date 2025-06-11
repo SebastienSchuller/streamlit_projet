@@ -36,8 +36,8 @@ def run():
     tab_name = st.sidebar.radio("Menu", list(PAGES.keys()), 0)
     st.sidebar.divider()
 
-    st.sidebar.text("Mariem A")
-    st.sidebar.text("Valérie GT")
+    st.sidebar.write("Mariem A")
+    st.sidebar.write("Valérie GT")
     st.sidebar.write("Sana N")
     st.sidebar.write("Sébastien S")
     tab = PAGES[tab_name]
