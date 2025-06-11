@@ -60,6 +60,7 @@ def run():
         with st.spinner("Tokenisation..."):
             encodings = tokenizer(new_comments, truncation=True, padding=True, max_length=128, return_tensors="pt")
 
+
         # Faire des prédictions
         with st.spinner("Evaluation..."):
             model.eval()

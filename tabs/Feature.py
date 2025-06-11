@@ -177,3 +177,61 @@ def run():
         #st.dataframe(df_1)
 
         st.dataframe(pd.concat((df_1,df_2),axis=1),hide_index=False)
+
+        st.write("### Modèles BERT")
+
+        @st.cache_resource(ttl=86400)
+        def load_model(model_path):
+            from transformers import AutoModelForSequenceClassification
+            return AutoModelForSequenceClassification.from_pretrained(model_path)
+
+        @st.cache_resource(ttl=86400)
+        def load_tokenizer(model_path):
+            from transformers import AutoTokenizer
+            return AutoTokenizer.from_pretrained(model_path,use_fast=False)#,local_files_only=True)
+        
+        # chargement du tokenizer et du modèle
+        with st.spinner("Chargement du modèle..."):
+
+            
+            import torch
+
+            import os
+            if "STREAMLIT_SERVER_RUN_ON_SAVE" in os.environ:
+                #st.write("Exécution sur Streamlit Cloud")
+                MODE = "cloud"
+                model_path="Microbug/camembert-base-reviewfr"
+            else:
+                #st.write("Exécution locale")
+                MODE = "local"
+                model_path='./../_camembert/'
+            
+
+            # chargement du tokenizer    
+            #tokenizer = AutoTokenizer.from_pretrained(model_path,use_fast=False,local_files_only=True)
+            tokenizer=load_tokenizer(model_path)
+            # tokenizer = AutoTokenizer.from_pretrained(model_path,use_fast=False)
+
+            # chargement du modèle
+            # model = AutoModelForSequenceClassification.from_pretrained(model_path)
+            model=load_model(model_path)
+
+        with st.spinner("Tokenisation..."):
+            encodings = tokenizer([inputcommentaire,inputcommentaire_2], truncation=True, padding=True, max_length=128, return_tensors="pt")
+
+
+        # Afficher le token
+        import pandas as pd
+        st.write("Commentaire après passage dans le tokenizer Bert")
+        st.dataframe(pd.DataFrame(encodings.input_ids))
+        st.write("Attention mask")
+        st.dataframe(pd.DataFrame(encodings.attention_mask))
+
+        # Vectorisation
+        model.eval()
+        with torch.no_grad():
+            outputs2 = model.roberta(**encodings) # la partie roberta donne l'encoding et l'embedding, juste avant la partie classification
+            last_hidden_state = outputs2.last_hidden_state  # (1, seq_len, hidden_size)
+            cls_vector = last_hidden_state[:, 0, :]
+        st.write("Vecteur [CLS] passé à la tête de classification")
+        st.dataframe(pd.DataFrame(cls_vector))
