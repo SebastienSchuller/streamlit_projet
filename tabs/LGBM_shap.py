@@ -98,29 +98,33 @@ def run():
             explainer = shap.TreeExplainer(model)
             shap_values_pipe = explainer.shap_values(X_pred_vector) 
 
-        individu=0
+            individu=0
 
        
 
-        feature_names = vectorizer.get_feature_names_out().tolist() + ['Commentaire_len']
+            feature_names = vectorizer.get_feature_names_out().tolist() + ['Commentaire_len']
 
-        # pour l'individu 1 et toutes les i classes
-        # Boucle pour afficher plusieurs graphiques SHAP 
-        import matplotlib.pyplot as plt
+            # pour l'individu 1 et toutes les i classes
+            # Boucle pour afficher plusieurs graphiques SHAP 
+            import matplotlib.pyplot as plt
 
-        @st.cache_resource(ttl=86400)
-        def shap_plot(expected_value,shap_value_ind,X_pred,feature_names,matplotlib):
-            st.write(f"### Star: {i+1}")
-            fig = plt.figure()
-            shap.force_plot(expected_value,shap_value_ind,X_pred,feature_names,matplotlib=True)
-            st.pyplot(plt.gcf())
+            #@st.cache_resource(ttl=86400) consomme trop de mémoire si en cache ?
+            def shap_plot(expected_value,shap_value_ind,X_pred,feature_names,matplotlib):
+                #st.write(f"### Star: {i+1}")
+                fig = plt.figure()
+                shap.force_plot(expected_value,shap_value_ind,X_pred,feature_names,matplotlib=True)
+                st.pyplot(plt.gcf())
 
 
-        for i in range(5):
+            #for i in range(5):
+            #    shap_plot(explainer.expected_value[i],shap_values_pipe[individu,...,i],X_pred_vector,feature_names=feature_names,matplotlib=True)
+
+            # juste le graph de la note prédite
+            i=y_test[0]-1
             shap_plot(explainer.expected_value[i],shap_values_pipe[individu,...,i],X_pred_vector,feature_names=feature_names,matplotlib=True)
 
-            # ancienne version sans cache
-            # st.write(f"### Star: {i+1}")
-            # fig = plt.figure()
-            # shap.force_plot(explainer.expected_value[i],shap_values_pipe[individu,...,i],X_pred_vector,feature_names=feature_names,matplotlib=True)
-            # st.pyplot(plt.gcf())
+                # ancienne version sans cache
+                # st.write(f"### Star: {i+1}")
+                # fig = plt.figure()
+                # shap.force_plot(explainer.expected_value[i],shap_values_pipe[individu,...,i],X_pred_vector,feature_names=feature_names,matplotlib=True)
+                # st.pyplot(plt.gcf())
