@@ -1,14 +1,26 @@
 import streamlit as st
+import config
 from collections import OrderedDict
 
-st.set_page_config(page_title="DS - Orange - Supply Chain", page_icon="🚀",layout="wide")
+
+def show_header(tab):
+    st.markdown(f"<h2 style='color:#1f77b4'>Analyse des Avis Clients - {tab}</h2>", unsafe_allow_html=True)
+    st.markdown("---")
+
+def show_footer():
+    st.markdown("<hr><p style='text-align:center; font-size:12px; color:gray;'>Projet jun24cds_supply_chain</p>", unsafe_allow_html=True)
+
+
+
+
+st.set_page_config(page_title="DS - Orange - Supply Chain", page_icon="⭐",layout="wide")
 
 with open("style.css", "r") as f:
     style = f.read()
 
 st.markdown(f"<style>{style}</style>", unsafe_allow_html=True)
 
-st.title("Analyse des commentaires clients")
+
 
 commentaire_defaut='très bonnes expériences avec showroomprivé : sérieux , choix , qualité , prix et rapidité de livraison.Très satisfaite aussi du service client : retours et remboursements .'
 
@@ -29,20 +41,44 @@ PAGES = OrderedDict(
 
 def run():
     # logo orange et DS ?
-    # st.sidebar.image(
-    #     "https://dst-studio-template.s3.eu-west-3.amazonaws.com/logo-datascientest.png",
-    #     width=200,
+    #st.sidebar.image(
+    #""    "https://dst-studio-template.s3.eu-west-3.amazonaws.com/logo-datascientest.png",
+    #    width=200,
     #)
-    tab_name = st.sidebar.radio("Menu", list(PAGES.keys()), 0)
+
+    import base64
+
+    def get_base64_of_bin_file(bin_file):
+        with open(bin_file, 'rb') as f:
+            data = f.read()
+        return base64.b64encode(data).decode()
+
+    image_path = "assets/DataScientest-TrustPilot.jpg"
+    img_base64 = get_base64_of_bin_file(image_path)
+
+    st.sidebar.markdown(
+    f"""
+    <div style="text-align: center;">
+        <img src="data:image/jpeg;base64,{img_base64}" width="200"/>
+        <p style="font-size: 10px; color: grey;">DataScientest - Source : TrustPilot (13 juin 2025)</p>
+    </div>
+    """,
+    unsafe_allow_html=True
+    )
+
+    st.sidebar.title("Sommaire")
+    tab_name = st.sidebar.radio("Navigation", list(PAGES.keys()), 0)
     st.sidebar.divider()
 
-    st.sidebar.write("Mariem A")
-    st.sidebar.write("Valérie GT")
-    st.sidebar.write("Sana N")
-    st.sidebar.write("Sébastien S")
-    tab = PAGES[tab_name]
+    st.sidebar.markdown("<h3 style='color:#1f77b4;'>Membres de l'équipe</h3>",
+    unsafe_allow_html=True)
+    for member in config.TEAM_MEMBERS:
+        st.sidebar.markdown(member.sidebar_markdown(), unsafe_allow_html=True)
 
+    tab = PAGES[tab_name]
+    show_header(tab_name)
     tab.run()
+    show_footer()
 
 if __name__ == "__main__":
     run()
