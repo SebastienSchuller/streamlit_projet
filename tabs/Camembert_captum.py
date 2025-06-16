@@ -84,7 +84,7 @@ def run():
         
         occlusion = Occlusion(forward_func)
 
-        @st.cache_resource(ttl=86400)        
+        #@st.cache_resource(ttl=86400)        
         def interpretabilite_occlusion(_model,x,y,sliding_window_shapes=(1,),show_progress=True):
             inputs = tokenizer(x, return_tensors="pt", truncation=True, padding=True)
             input_ids = inputs["input_ids"]
