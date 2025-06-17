@@ -77,7 +77,7 @@ def run():
         # chargement du modèle et de ses paramètres
         from lightgbm import LGBMClassifier
 
-        @st.cache_resource(ttl=86400)
+        @st.cache_resource(ttl=86400,show_spinner=False)
         def load_model_lgbm():
             return joblib.load("./models/lgbm/lgbm.pkl")
 

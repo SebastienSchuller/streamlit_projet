@@ -116,12 +116,12 @@ def run():
 
         # fonction en cache
         import spacy
-        @st.cache_resource
+        @st.cache_resource(show_spinner=False)
         def spacy_load_sm():
             return spacy.load('fr_core_news_sm')
 
         @st.cache_resource
-        def spacy_load_lg():
+        def spacy_load_lg(show_spinner=False):
             return spacy.load('fr_core_news_lg')
         
         # Lemmatisation avec Spacy
@@ -232,12 +232,12 @@ def run():
 
         st.write("### Modèles BERT")
 
-        @st.cache_resource(ttl=86400)
+        @st.cache_resource(ttl=86400,show_spinner=False)
         def load_model(model_path):
             from transformers import AutoModelForSequenceClassification
             return AutoModelForSequenceClassification.from_pretrained(model_path)
 
-        @st.cache_resource(ttl=86400)
+        @st.cache_resource(ttl=86400,show_spinner=False)
         def load_tokenizer(model_path):
             from transformers import AutoTokenizer
             return AutoTokenizer.from_pretrained(model_path,use_fast=False)#,local_files_only=True)
