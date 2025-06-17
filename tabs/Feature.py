@@ -68,6 +68,10 @@ def run():
     if (launch and form_valid): 
         st.divider()
 
+        #sauvegarde du commentaire 1 pour les autres pages
+        st.session_state["c1"] = inputcommentaire
+
+
         # init du 2ème commentaire pour comparaison
         commentaire_2 = commentaire_defaut
         if inputcommentaire == commentaire_defaut:

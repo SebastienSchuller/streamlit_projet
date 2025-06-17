@@ -18,7 +18,7 @@ def run():
         st.session_state["c1"] = commentaire_defaut
 
     # zone de saisie du commentaire à tester
-    inputcommentaire=st.text_input("Commentaire à analyser:",key="c1")#commentaire_defaut)
+    inputcommentaire=st.text_input("Commentaire à analyser:",key="c1",value=st.session_state["c1"])#commentaire_defaut)
 
     # bouton de validation
     if st.button("Analyser"):
