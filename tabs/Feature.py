@@ -5,34 +5,82 @@ sidebar_name = "Feature Engineering"
 
 
 def run():
+    text_button = "Simuler les Feature Engineering"
     commentaire_defaut='très bonnes expériences avec showroomprivé : sérieux , choix , qualité , prix et rapidité de livraison.Très satisfaite aussi du service client : retours et remboursements .'
-    st.write('## Saisissez un commentaire:')
-
-    # Initialisation des valeurs si elles n'existent pas encore
+    
     if "c1" not in st.session_state:
         st.session_state["c1"] = commentaire_defaut
-    if "c2" not in st.session_state:
-        st.session_state["c2"] = "c est des voleur j ais commande des albums photo et jamais recus les codes , conclusion e dans l os , merci voleur prive ,"
 
-    # Fonction de permutation
-    def permuter():
-        st.session_state["c1"], st.session_state["c2"] = st.session_state["c2"], st.session_state["c1"]
+    st.markdown(
+        f"""
+        Visualiser les transformations apportées sur un commentaire brut de notre jeu de données en le sélectionnant dans la liste déroulante puis en appuyant sur le bouton "{text_button}".
+        """
+    )
+    
+    st.write('## Sélection du commentaire')
 
-    # zone de saisie du commentaire à tester
-    inputcommentaire=st.text_input("Commentaire à analyser:",key="c1")#,value=st.session_state["c1"])
-    inputcommentaire_2=st.text_input("2ème commentaire à analyser:",key="c2")#,value=st.session_state["c2"])
+    # Commentaires proposés dans la liste déroulante
+    commentaires = ["Veuillez sélectionner...", commentaire_defaut, "c est des voleur j ais commande des albums photo et jamais recus les codes , conclusion e dans l os , merci voleur prive ,", 
+                    "Madame , Monsieur , MA COMMANDE NE M'EST PAS PARVENUE ET JE SUIS EXTREMEMENT MECONTENTE . J'AI FAIT A CET EGARD 2 RECLAMATIONS AUPRES DE VOS SERVICES . MERCI DE FAIRE LE NECESSAIRE",
+                    "Vente-privee des voleur à fuir vous faites pas avoir comme moi ServiceClient lamentable 👎 😡😡😡😡😡😡😡😡😡😡😡😡😡😡😡😡 💩 💩 💩 💩"]
 
-    col1, col2 = st.columns(2)  # Divise l'espace en 2 colonnes
-    col2.button("Inverser",on_click=permuter)
-    launch=col1.button("Simuler les Feature Engineering")
+    # Initialisation des valeurs par défaut si elles n'existent pas encore
+    if "select_value" not in st.session_state:
+        st.session_state.select_value = commentaires[1]
+    if "free_value" not in st.session_state:
+        st.session_state.free_value = ""
+
+    # Fonction de vérification des champs commentaire
+    def on_free_text_change():
+        if st.session_state.free_value != "":
+            st.session_state.select_value = commentaires[0]
+
+    def on_select_change():
+        if st.session_state.select_value != commentaires[0]:
+           st.session_state.free_value = ""
+
+           
+    # liste déroulante de commentaires du jeu de données
+    selected_comment = st.selectbox("Choix d'un commentaire extrait de notre jeu de données par menu déroulant", options=commentaires, key="select_value", on_change=on_select_change)
+
+    # zone de saisie libre du commentaire à tester
+    free_comment=st.text_input("ou commentaire libre à saisir ici :",key="free_value", on_change=on_free_text_change)
+    
+    # inputcommentaire = commentaire à analyser --> init par défaut au commentaire de la liste déroulante
+    inputcommentaire = selected_comment
+    # check sur le champ de saisie
+    if free_comment != "":
+        inputcommentaire = free_comment
+
+    # Condition pour afficher le message d'alerte au clic sur le bouton
+    text_filled = st.session_state.free_value.strip() != ""
+    select_chosen = st.session_state.select_value != commentaires[0]
+    form_valid = text_filled or select_chosen
+
+    launch = st.button(text_button)
+
+    # Message d'alerte si le formulaire est invalide et bouton cliqué
+    if not form_valid and launch:
+        st.warning("Veuillez sélectionner ou saisir un commentaire pour pouvoir continuer.")
 
 
-    if launch: #st.button("Simuler les Feature Engineering"):
+    # analyse only if button and form_valid
+    if (launch and form_valid): 
         st.divider()
 
+        # init du 2ème commentaire pour comparaison
+        commentaire_2 = commentaire_defaut
+        if inputcommentaire == commentaire_defaut:
+            commentaire_2 = commentaires[2]
+
+        # calcul features numériques
+        import string
+        upper_letters = sum(1 for char in inputcommentaire if char.isupper())
+        punct_count = sum(1 for char in inputcommentaire if char in string.punctuation)
+        
         # mise en minuscule, on garde le commentaire initial dans inputcommentaire
         commentaire=inputcommentaire.lower()
-        commentaire_2=inputcommentaire_2.lower()
+        commentaire_2=commentaire_2.lower()
 
         # suppression des chiffres
         import re
@@ -88,12 +136,12 @@ def run():
 
             commentaire_spacy_sm_2=lemmatisation_spacy(commentaire_2,nlp_sm) 
         
-
+        st.markdown("<p style='font-size:16px; color:#1f77b4'>Résultat des prétraitements et de l'extraction des features sur le commentaire sélectionné ci-dessus</p>", unsafe_allow_html=True)
         dict_feature={
             "Commentaire brut": inputcommentaire,
             "Longueur du commentaire": len(inputcommentaire),
-            "Commentaire en minuscule": commentaire,
-            "Commentaire sans chiffres": commentaire,
+            "Nombre de majuscules": upper_letters,
+            "Nombre de ponctuations": punct_count,
             "Commentaire sans smileys": commentaire,
             "Commentaire après stemming NLTK": commentaire_stem,
             "Commentaire après lemming NLTK": commentaire_lemm,
@@ -106,8 +154,9 @@ def run():
         st.dataframe(data=df_feature,hide_index=True,use_container_width=True)  
 
         st.divider()
-        st.write("## Vectorisation (basé sur le commentaire traité avec Spacy fr_core_news_sm)")
-    
+        st.write("## Vectorisation (basée sur le commentaire traité avec Spacy fr_core_news_sm)")
+        st.markdown(f"<p style='font-size:16px; color:#1f77b4'>A des fins de comparaison, les vectorisations ci-dessous sont présentées pour le commentaire sélectionné plus haut (1ère ligne) et ce deuxième commentaire extrait de notre jeu de données (2ème ligne): \"{commentaire_2}\"</p>", unsafe_allow_html=True)
+
         # BoW
         from sklearn.feature_extraction.text import CountVectorizer
         from nltk.corpus import stopwords
@@ -138,14 +187,14 @@ def run():
         tfidf=TfidfVectorizer(strip_accents='unicode',stop_words=list(stop_words)) # on supprime les accents
         tfidf.fit([commentaire_spacy_sm,commentaire_spacy_sm_2])
         result_tfidf=tfidf.transform([commentaire_spacy_sm,commentaire_spacy_sm_2])
-        st.write("### TF-IDF - Représentation creuse")
+        st.write("### TF-IDF (valeur par défaut pour ngram_range=(1,1)) - Représentation creuse")
         st.dataframe(pd.DataFrame(result_tfidf.todense(),columns=tfidf.get_feature_names_out()),hide_index=True)
 
         # TFIDF et ngrames
         tfidf=TfidfVectorizer(strip_accents='unicode',stop_words=list(stop_words),ngram_range=(1,2)) # on supprime les accents
         tfidf.fit([commentaire_spacy_sm,commentaire_spacy_sm_2])
         result_tfidf=tfidf.transform([commentaire_spacy_sm,commentaire_spacy_sm_2])
-        st.write("### TF-IDF (ngrames=(1,2))  - Représentation creuse")
+        st.write("### TF-IDF (ngram_range=(1,2))  - Représentation creuse")
         st.dataframe(pd.DataFrame(result_tfidf.todense(),columns=tfidf.get_feature_names_out()),hide_index=True)
 
         # Tiktoken
@@ -174,7 +223,6 @@ def run():
         #essai de représentation sous forme de dataframe des dictionnaires tiktoken
         df_1=pd.DataFrame(list(dict_tiktoken.items()), columns=["Vecteur_1", "Token_1"])
         df_2=pd.DataFrame(list(dict_tiktoken_2.items()), columns=["Vecteur_2", "Token_2"])
-        #st.dataframe(df_1)
 
         st.dataframe(pd.concat((df_1,df_2),axis=1),hide_index=False)
 
@@ -217,7 +265,7 @@ def run():
             model=load_model(model_path)
 
         with st.spinner("Tokenisation..."):
-            encodings = tokenizer([inputcommentaire,inputcommentaire_2], truncation=True, padding=True, max_length=128, return_tensors="pt")
+            encodings = tokenizer([inputcommentaire,commentaire_2], truncation=True, padding=True, max_length=128, return_tensors="pt")
 
 
         # Afficher le token
