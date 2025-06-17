@@ -30,12 +30,16 @@ def run():
         if proxy_config != st.session_state["proxy_config"]:
             st.session_state["proxy_config"] = proxy_config
 
+        st.markdown("Choisissez un modèle")
+        models=['mistral-small-2503','magistral-small-2506','mistral-large-latest']
+        selected_models = st.selectbox("Modèle", options=models, key="select_model")
+
     st.write('## Saisissez un commentaire à analyser avec le LLM')
     # zone de saisie du commentaire à tester
     inputcommentaire=st.text_input("Commentaire à analyser:",key="c1",value=st.session_state["c1"])#commentaire_defaut)
 
     st.write("## Prompt pour le LLM:")
-    prompt=st.text_area("Prompt:",value="Analyse le commentaire suivant et donne une note de 1 à 5 étoiles. Explique ta note et donne des mots clés associés au commentaire. (5 maximum)",height=68)         
+    prompt=st.text_area("Prompt:",value="Analyse le commentaire suivant et donne une note de 1 à 5 étoiles. Explique ta note et donne des mots clés associés au commentaire. (5 au maximum)",height=68)         
     
     from pydantic import BaseModel, Field, create_model
     from typing import List, get_args, get_origin, get_type_hints
@@ -91,8 +95,7 @@ def run():
             st.divider()
 
             st.write("## Utilisation d'un modèle Mistral AI avec une structured output")
-            st.write("Modèle: mistral-large-latest")
-            st.write("Température: ",str(temperature))
+            st.write("Modèle: ",selected_models, " Température: ",str(temperature))
 
             original_fields = Eval_commentaire.model_fields
             original_types = get_type_hints(Eval_commentaire)
@@ -115,7 +118,7 @@ def run():
             from langchain.prompts.prompt import PromptTemplate
 
             # LLM with function call
-            llm = ChatMistralAI(model="mistral-large-latest",api_key=mistral_api_key,temperature=temperature)
+            llm = ChatMistralAI(model=selected_models,api_key=mistral_api_key,temperature=temperature)
             structured_llm_evaluateur = llm.with_structured_output(CustomModel)#(Eval_commentaire)
             
             eval_prompt = ChatPromptTemplate.from_messages(
@@ -237,8 +240,8 @@ def run():
             
             # sleep pour gérer les limitations de l'API free Mistral AI
             import time
-            with st.spinner("Attente 5s pour le LLM..."):
-                time.sleep(5)
+            with st.spinner("Attente 1s pour le LLM..."):
+                time.sleep(1)
             retour=reponse_with_example(inputcommentaire,"")
             st.write("Prompt: Tu es un professionnel du service client après-vente, qui analyse et répond à des commentaires laissés par des clients suite à une commande.\n Tu t'inspires pour les réponses des exemples fournis le plus possible.")
             st.write("Réponse générée:")
@@ -265,8 +268,8 @@ def run():
                 question="Répond à ce commentaire: "+ commentaire + ". Nom:" + str(prenom)
                 docs = retrieval_grader_without_example.invoke({"input": question})
                 return docs
-            with st.spinner("Attente 5s pour le LLM..."):
-                time.sleep(5)
+            with st.spinner("Attente 1s pour le LLM..."):
+                time.sleep(1)
             retour=reponse_without_example(inputcommentaire,"")
 
             st.write("Réponse générée:")
