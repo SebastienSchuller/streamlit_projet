@@ -108,17 +108,16 @@ def run():
 
         i=y_test[0]-1
 
-        fig = plt.figure()
+        from streamlit_shap import st_shap
         if shap_method == shap_methods[0]:
-            shap.plots.waterfall(shap_values[0][:, i], max_display=10)
+            st_shap(shap.plots.waterfall(shap_values[0][:, i], max_display=10), height=400, width=1000)
         else:
-            shap.force_plot(
+            st_shap(shap.force_plot(
                 explainer.expected_value[i],
                 shap_values.values[0][:, i],
                 X_pred_vector,
-                feature_names=feature_names,
-                matplotlib=True
-            )
-        st.pyplot(plt.gcf())
+                feature_names=feature_names
+            ), height=200, width=1000)
+    
 
 
