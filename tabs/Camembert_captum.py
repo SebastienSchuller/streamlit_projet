@@ -16,15 +16,15 @@ def load_tokenizer(model_path):
 
 
 def run():
-    st.write('## Saisissez un commentaire à analyser avec le modèle Camembert')
+    st.write('## Saisissez un commentaire à analyser avec le modèle CamemBERT')
     commentaire_defaut='très bonnes expériences avec showroomprivé : sérieux , choix , qualité , prix et rapidité de livraison.Très satisfaite aussi du service client : retours et remboursements .'
 
     if "c1" not in st.session_state:
         st.session_state["c1"] = commentaire_defaut
 
     # zone de saisie du commentaire à tester
-    inputcommentaire=st.text_input("Commentaire à analyser:",key="c1",value=st.session_state["c1"])#commentaire_defaut)
-    fenetre_occ_max=st.slider("Taille max de la fenêtre d'occlusion (! au temps de calcul):",1,20,3,1,None,None,"De 1 à ...")
+    inputcommentaire=st.text_input("Commentaire à analyser :",key="c1",value=st.session_state["c1"])#commentaire_defaut)
+    fenetre_occ_max=st.slider("Taille max de la fenêtre d'occlusion (! au temps de calcul) :",1,20,3,1,None,None,"De 1 à ...")
     # bouton de validation
     if st.button("Analyser"):
         st.divider()
@@ -68,7 +68,7 @@ def run():
                 outputs = model(**encodings)
                 predictions = torch.argmax(outputs.logits, dim=1)
                 # st.write(predictions)
-                st.write("Notation du modèle Camembert réentrainé:",predictions.to("cpu").numpy()[0] + 1)  # Revenir à la notation initiale (1-5)
+                st.write("Notation du modèle CamemBERT réentrainé :",predictions.to("cpu").numpy()[0] + 1)  # Revenir à la notation initiale (1-5)
 
                 st.markdown(afficher_etoiles(predictions.to("cpu").numpy()[0] + 1), unsafe_allow_html=True)
 

@@ -3,9 +3,9 @@ sidebar_name = "Inférence LightGBM + SHAP"
 
 
 def run():
-    st.write('## Saisisssez un commentaire à analyser avec le modèle LGBM')
-    st.write("### Features en entrée du modèle:")
-    st.write("- Commentaire (lemmatisation spacy fr_core_news_sm, vectorisation TF-iDF avec stopwords)")
+    st.write('## Saisisssez un commentaire à analyser avec le modèle LightGBM')
+    st.write("### Features en entrée du modèle :")
+    st.write("- Commentaire (lemmatisation Spacy fr_core_news_sm, vectorisation TF-IDF avec stopwords)")
     st.write("- Longueur du commentaire (normalisée avec MinMaxScaler)")
 
     # commentaire par défaut
@@ -15,7 +15,7 @@ def run():
         st.session_state["c1"] = commentaire_defaut
 
     # zone de saisie du commentaire à tester
-    inputcommentaire=st.text_input("Commentaire à analyser:",key="c1",value=st.session_state["c1"])
+    inputcommentaire=st.text_input("Commentaire à analyser :",key="c1",value=st.session_state["c1"])
 
     # Charger les ressources en cache
     @st.cache_resource(ttl=86400, show_spinner=False)
@@ -46,7 +46,7 @@ def run():
         st.divider()
         commentaire = st.session_state["commentaire"]
         comm_length=len(commentaire)
-        st.write("Longueur du commentaire:",comm_length, "caractères")
+        st.write("Longueur du commentaire :",comm_length, "caractères")
 
         # mise en minuscule, on garde le commentaire initial dans inputcommentaire
         commentaire=commentaire.lower()
@@ -74,7 +74,7 @@ def run():
         # with st.spinner("Lemmatisation.."):        
         #    commentaire=lemmatisation_spacy(commentaire)
         commentaire=lemmatisation_spacy(commentaire)
-        st.write("Commentaire après lemmatisation Spacy:",commentaire)
+        st.write("Commentaire après lemmatisation Spacy :",commentaire)
 
         # Vectorisation TF-IDF: chargement du vocabulaire
         from sklearn.feature_extraction.text import TfidfVectorizer         
@@ -87,7 +87,7 @@ def run():
         X_pred_vector=pd.DataFrame(np.hstack((vector_commentaire.todense(),comm_length)))
 
         y_test=model.predict(X_pred_vector)
-        st.write("Le modèle LGBM prédit une note de:",y_test[0],"pour ce commentaire.")
+        st.write("Le modèle LGBM prédit une note de :",y_test[0],"pour ce commentaire.")
        
     
         # Affichage de la note sous forme d'étoiles
@@ -111,7 +111,7 @@ def run():
 
         fig = plt.figure()
         if shap_method == shap_methods[0]:
-            shap.plots.waterfall(shap_values[0][:, i], max_display=15)
+            shap.plots.waterfall(shap_values[0][:, i], max_display=10)
         else:
             shap.force_plot(
                 explainer.expected_value[i],

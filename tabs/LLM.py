@@ -36,7 +36,7 @@ def run():
 
     st.write('## Saisissez un commentaire à analyser avec le LLM')
     # zone de saisie du commentaire à tester
-    inputcommentaire=st.text_input("Commentaire à analyser:",key="c1",value=st.session_state["c1"])#commentaire_defaut)
+    inputcommentaire=st.text_input("Commentaire à analyser :",key="c1",value=st.session_state["c1"])#commentaire_defaut)
 
     st.write("## Prompt pour le LLM:")
     prompt=st.text_area("Prompt:",value="Analyse le commentaire suivant et donne une note de 1 à 5 étoiles. Explique ta note et donne des mots clés associés au commentaire. (5 au maximum)",height=68)         
@@ -51,7 +51,7 @@ def run():
         keywords: List[str] = Field(..., description="Liste de mots clés associés au commentaire (5 mots maximum)")
         topic: str = Field(description="Sujet du commentaire")
 
-    st.write("## Champs du Structured Output:")
+    st.write("## Champs du Structured Output :")
     # Liste des champs disponibles
     
     options = ["star", "ton", "keywords", "topic"]
@@ -62,7 +62,7 @@ def run():
         if st.checkbox(option, key=option,value=True):
             selected_fields.append(option)
 
-    st.write("## Température:") 
+    st.write("## Température :") 
     temperature = st.slider(
         'Choisissez la température',
         min_value=0.0,
@@ -95,7 +95,7 @@ def run():
             st.divider()
 
             st.write("## Utilisation d'un modèle Mistral AI avec une structured output")
-            st.write("Modèle: ",selected_models, " Température: ",str(temperature))
+            st.write("Modèle : ",selected_models, " Température: ",str(temperature))
 
             original_fields = Eval_commentaire.model_fields
             original_types = get_type_hints(Eval_commentaire)
@@ -131,27 +131,27 @@ def run():
             retrieval_grader = eval_prompt | structured_llm_evaluateur
 
             def eval(commentaire):
-                question="Evalue ce commentaire: "+commentaire
+                question="Evalue ce commentaire : "+commentaire
                 docs = retrieval_grader.invoke({"query": question})
                 return docs
             
             retour=eval(inputcommentaire)
-            st.write("## Résultat de l'évaluation du LLM:") 
+            st.write("## Résultat de l'évaluation du LLM :") 
             # st.write(retour)
 
             for k in retour.model_dump().keys():
                 if k=="star":
-                    st.write("### Note du commentaire:",retour.star)
+                    st.write("### Note du commentaire :",retour.star)
                     st.markdown(afficher_etoiles(retour.star), unsafe_allow_html=True)
                 elif k=="ton":
-                    st.write("### Ton du commentaire:",retour.ton)  
+                    st.write("### Ton du commentaire :",retour.ton)  
                 elif k=="keywords":
-                    st.write("### Mots clés associés au commentaire:",retour.keywords)
+                    st.write("### Mots clés associés au commentaire :",retour.keywords)
                 elif k=="topic":
-                    st.write("### Sujet du commentaire:",retour.topic)
+                    st.write("### Sujet du commentaire :",retour.topic)
 
             #### début partie réponse au commentaire
-            st.write("## Réponse au commentaire avec une approche few shot example:")
+            st.write("## Réponse au commentaire avec une approche few shot example :")
             auto_examples=[{'input': 'Nom client: nan Commentaire:Je ne recommande pas Showroomprivé en '
                         'Belgique . Service client : 0 ! En fonction des marques , il '
                         'arrive que les produits arrivent abîmés , que des erreurs sur le '
@@ -234,7 +234,7 @@ def run():
             retrieval_grader_with_example = prompt_template | structured_llm_evaluateur_with_example
 
             def reponse_with_example(commentaire,prenom):
-                question="Répond à ce commentaire: "+ commentaire + ". Nom:" + str(prenom)
+                question="Réponds à ce commentaire : "+ commentaire + ". Nom :" + str(prenom)
                 docs = retrieval_grader_with_example.invoke({"input": question})
                 return docs
             
@@ -243,13 +243,13 @@ def run():
             with st.spinner("Attente 1s pour le LLM..."):
                 time.sleep(1)
             retour=reponse_with_example(inputcommentaire,"")
-            st.write("Prompt: Tu es un professionnel du service client après-vente, qui analyse et répond à des commentaires laissés par des clients suite à une commande.\n Tu t'inspires pour les réponses des exemples fournis le plus possible.")
-            st.write("Réponse générée:")
+            st.write("Prompt : Tu es un professionnel du service client après-vente, qui analyse et répond à des commentaires laissés par des clients suite à une commande.\n Tu t'inspires pour les réponses des exemples fournis le plus possible.")
+            st.write("Réponse générée :")
             st.info(retour.reponse)
 
             ## Réponse sans fewshot ?
-            st.write("## Réponse au commentaire sans l'approche few shot example:")
-            st.write("Prompt: Tu es un professionnel du service client après-vente, qui analyse et répond à des commentaires laissés par des clients suite à une commande.")
+            st.write("## Réponse au commentaire sans l'approche few shot example :")
+            st.write("Prompt : Tu es un professionnel du service client après-vente, qui analyse et répond à des commentaires laissés par des clients suite à une commande.")
             structured_llm_without_example=llm.with_structured_output(Reponse_commentaire)
             # Prompt
             system = """Tu es un professionnel du service client après-vente, qui analyse et répond à des commentaires laissés par des clients suite à une commande.\n
@@ -265,12 +265,12 @@ def run():
             retrieval_grader_without_example = eval_prompt | structured_llm_without_example
 
             def reponse_without_example(commentaire,prenom):
-                question="Répond à ce commentaire: "+ commentaire + ". Nom:" + str(prenom)
+                question="Répond à ce commentaire : "+ commentaire + ". Nom :" + str(prenom)
                 docs = retrieval_grader_without_example.invoke({"input": question})
                 return docs
             with st.spinner("Attente 1s pour le LLM..."):
                 time.sleep(1)
             retour=reponse_without_example(inputcommentaire,"")
 
-            st.write("Réponse générée:")
+            st.write("Réponse générée :")
             st.info(retour.reponse)
