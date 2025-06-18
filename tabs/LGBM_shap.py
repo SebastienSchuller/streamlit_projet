@@ -3,7 +3,6 @@ sidebar_name = "Inférence LightGBM + SHAP"
 
 
 def run():
-    st.write('## Saisisssez un commentaire à analyser avec le modèle LightGBM')
     st.write("### Features en entrée du modèle :")
     st.write("- Commentaire (lemmatisation Spacy fr_core_news_sm, vectorisation TF-IDF avec stopwords)")
     st.write("- Longueur du commentaire (normalisée avec MinMaxScaler)")
@@ -15,7 +14,7 @@ def run():
         st.session_state["c1"] = commentaire_defaut
 
     # zone de saisie du commentaire à tester
-    inputcommentaire=st.text_input("Commentaire à analyser :",key="c1",value=st.session_state["c1"])
+    inputcommentaire=st.text_input("Commentaire à analyser",key="c1",value=st.session_state["c1"])
 
     # Charger les ressources en cache
     @st.cache_resource(ttl=86400, show_spinner=False)

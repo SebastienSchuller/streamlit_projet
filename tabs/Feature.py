@@ -45,7 +45,7 @@ def run():
     selected_comment = st.selectbox("Choix d'un commentaire extrait de notre jeu de données par menu déroulant", options=commentaires, key="select_value", on_change=on_select_change)
 
     # zone de saisie libre du commentaire à tester
-    free_comment=st.text_input("ou commentaire libre à saisir ici :",key="free_value", on_change=on_free_text_change)
+    free_comment=st.text_input("ou commentaire libre à saisir ici",key="free_value", on_change=on_free_text_change)
     
     # inputcommentaire = commentaire à analyser --> init par défaut au commentaire de la liste déroulante
     inputcommentaire = selected_comment

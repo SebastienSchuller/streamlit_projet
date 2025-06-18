@@ -7,7 +7,9 @@ sidebar_name = "Inférence LLM Mistral AI"
 
 def run():
     commentaire_defaut='très bonnes expériences avec showroomprivé : sérieux , choix , qualité , prix et rapidité de livraison.Très satisfaite aussi du service client : retours et remboursements .'
-
+    
+    # clear LightGBM analysis cache
+    st.session_state["analyse_done"] = False
 
     if "c1" not in st.session_state:
         st.session_state["c1"] = commentaire_defaut
@@ -34,12 +36,12 @@ def run():
         models=['mistral-small-2503','magistral-small-2506','mistral-large-latest']
         selected_models = st.selectbox("Modèle", options=models, key="select_model")
 
-    st.write('## Saisissez un commentaire à analyser avec le LLM')
+    st.markdown("<p style='font-size:0.875rem; font-weight: bold; margin-top:10px; margin-bottom:-50px'>Commentaire à analyser avec le LLM</p>", unsafe_allow_html=True)
     # zone de saisie du commentaire à tester
-    inputcommentaire=st.text_input("Commentaire à analyser :",key="c1",value=st.session_state["c1"])#commentaire_defaut)
+    inputcommentaire=st.text_input("",key="c1",value=st.session_state["c1"])
 
-    st.write("## Prompt pour le LLM:")
-    prompt=st.text_area("Prompt:",value="Analyse le commentaire suivant et donne une note de 1 à 5 étoiles. Explique ta note et donne des mots clés associés au commentaire. (5 au maximum)",height=68)         
+    st.markdown("<p style='font-size:0.875rem; font-weight: bold; margin-top:10px; margin-bottom:-50px'>Prompt pour le LLM</p>", unsafe_allow_html=True)
+    prompt=st.text_area("",value="Analyse le commentaire suivant et donne une note de 1 à 5 étoiles. Explique ta note et donne des mots clés associés au commentaire. (5 au maximum)",height=68)         
     
     from pydantic import BaseModel, Field, create_model
     from typing import List, get_args, get_origin, get_type_hints
@@ -51,9 +53,9 @@ def run():
         keywords: List[str] = Field(..., description="Liste de mots clés associés au commentaire (5 mots maximum)")
         topic: str = Field(description="Sujet du commentaire")
 
-    st.write("## Champs du Structured Output :")
-    # Liste des champs disponibles
-    
+    st.markdown("<p style='font-size:0.875rem; font-weight: bold; margin-top:10px; margin-bottom:-20px'>Champs du Structured Output</p>", unsafe_allow_html=True)
+
+    # Liste des champs disponibles    
     options = ["star", "ton", "keywords", "topic"]
     cols = st.columns(len(options))  # Crée une colonne par option
 
@@ -62,9 +64,10 @@ def run():
         if st.checkbox(option, key=option,value=True):
             selected_fields.append(option)
 
-    st.write("## Température :") 
+    st.markdown("<p style='font-size:0.875rem; font-weight: bold; margin-top:10px; margin-bottom:-20px'>Choix de la température</p>", unsafe_allow_html=True)
+    #st.write("## Température") 
     temperature = st.slider(
-        'Choisissez la température',
+        '',
         min_value=0.0,
         max_value=1.0,
         value=0.0,
