@@ -5,6 +5,7 @@ sidebar_name = "Feature Engineering"
 
 
 def run():
+    st.session_state["analyse_done"] = False
     text_button = "Simuler les Feature Engineering"
     commentaire_defaut='très bonnes expériences avec showroomprivé : sérieux , choix , qualité , prix et rapidité de livraison.Très satisfaite aussi du service client : retours et remboursements .'
     
@@ -120,8 +121,8 @@ def run():
         def spacy_load_sm():
             return spacy.load('fr_core_news_sm')
 
-        @st.cache_resource
-        def spacy_load_lg(show_spinner=False):
+        @st.cache_resource(show_spinner=False)
+        def spacy_load_lg():
             return spacy.load('fr_core_news_lg')
         
         # Lemmatisation avec Spacy

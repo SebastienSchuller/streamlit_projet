@@ -2,7 +2,7 @@ import streamlit as st
 from func import afficher_etoiles
 #from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
-sidebar_name = "Simulation Camembert + Captum"
+sidebar_name = "Inférence CamemBERT + Captum"
 
 @st.cache_resource(ttl=86400,show_spinner=False)
 def load_model(model_path):
@@ -84,7 +84,7 @@ def run():
         
         occlusion = Occlusion(forward_func)
 
-        #@st.cache_resource(ttl=86400)        
+        #@st.cache_resource(ttl=86400,show_spinner=False)        
         def interpretabilite_occlusion(_model,x,y,sliding_window_shapes=(1,),show_progress=True):
             inputs = tokenizer(x, return_tensors="pt", truncation=True, padding=True)
             input_ids = inputs["input_ids"]

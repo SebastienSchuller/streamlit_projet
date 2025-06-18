@@ -2,7 +2,7 @@ import streamlit as st
 from func import afficher_etoiles
 import os 
 
-sidebar_name = "Simulation LLM Mistral AI"
+sidebar_name = "Inférence LLM Mistral AI"
 
 
 def run():
