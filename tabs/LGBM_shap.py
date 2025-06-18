@@ -99,7 +99,7 @@ def run():
 
 
         # Interprétabilité avec shap
-        @st.cache_resource(ttl=3600)
+        @st.cache_resource(ttl=86400, show_spinner=False)
         def get_shap_explainer():
             return shap.Explainer(model)
         
