@@ -38,10 +38,10 @@ def run():
 
     st.markdown("<p style='font-size:0.875rem; font-weight: bold; margin-top:10px; margin-bottom:-50px'>Commentaire à analyser avec le LLM</p>", unsafe_allow_html=True)
     # zone de saisie du commentaire à tester
-    inputcommentaire=st.text_input("",key="c1",value=st.session_state["c1"])
+    inputcommentaire=st.text_input("Commentaire",key="c1",value=st.session_state["c1"],label_visibility='hidden')
 
     st.markdown("<p style='font-size:0.875rem; font-weight: bold; margin-top:10px; margin-bottom:-50px'>Prompt pour le LLM</p>", unsafe_allow_html=True)
-    prompt=st.text_area("",value="Analyse le commentaire suivant et donne une note de 1 à 5 étoiles. Explique ta note et donne des mots clés associés au commentaire. (5 au maximum)",height=68)         
+    prompt=st.text_area("Prompt",value="Analyse le commentaire suivant et donne une note de 1 à 5 étoiles. Explique ta note et donne des mots clés associés au commentaire. (5 au maximum)",height=68,label_visibility='hidden')         
     
     from pydantic import BaseModel, Field, create_model
     from typing import List, get_args, get_origin, get_type_hints
@@ -67,11 +67,12 @@ def run():
     st.markdown("<p style='font-size:0.875rem; font-weight: bold; margin-top:10px; margin-bottom:-20px'>Choix de la température</p>", unsafe_allow_html=True)
     #st.write("## Température") 
     temperature = st.slider(
-        '',
+        'Température',
         min_value=0.0,
         max_value=1.0,
         value=0.0,
-        step=0.05
+        step=0.05,
+        label_visibility='hidden'
     )
     
     # bouton de validation
