@@ -6,6 +6,13 @@ sidebar_name = "Présentation du projet"
 
 
 def run():
+  # clear LightGBM analysis cache
+  st.session_state["analyse_done"] = False
+  # init default comment used by tabs
+  commentaire_defaut='très bonnes expériences avec showroomprivé : sérieux , choix , qualité , prix et rapidité de livraison.Très satisfaite aussi du service client : retours et remboursements .'   
+  if "c1" not in st.session_state:
+    st.session_state["c1"] = commentaire_defaut
+  
   st.markdown("<p style='font-size:24px; color:#1f77b4'>La satisfaction client au coeur des préoccupations</p>", unsafe_allow_html=True)
   
   image = Image.open("assets/supply_chain_img.png")

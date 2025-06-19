@@ -8,9 +8,6 @@ def run():
     st.session_state["analyse_done"] = False
     text_button = "Simuler les Feature Engineering"
     commentaire_defaut='très bonnes expériences avec showroomprivé : sérieux , choix , qualité , prix et rapidité de livraison.Très satisfaite aussi du service client : retours et remboursements .'
-    
-    if "c1" not in st.session_state:
-        st.session_state["c1"] = commentaire_defaut
 
     st.markdown(
         f"""
@@ -35,10 +32,12 @@ def run():
     def on_free_text_change():
         if st.session_state.free_value != "":
             st.session_state.select_value = commentaires[0]
+            st.session_state.c1=st.session_state.free_value
 
     def on_select_change():
         if st.session_state.select_value != commentaires[0]:
            st.session_state.free_value = ""
+           st.session_state.c1=st.session_state.select_value
 
            
     # liste déroulante de commentaires du jeu de données
@@ -46,12 +45,15 @@ def run():
 
     # zone de saisie libre du commentaire à tester
     free_comment=st.text_input("ou commentaire libre à saisir ici",key="free_value", on_change=on_free_text_change)
+
     
     # inputcommentaire = commentaire à analyser --> init par défaut au commentaire de la liste déroulante
     inputcommentaire = selected_comment
     # check sur le champ de saisie
     if free_comment != "":
         inputcommentaire = free_comment
+        # update c1
+        st.session_state["c1"] = inputcommentaire
 
     # Condition pour afficher le message d'alerte au clic sur le bouton
     text_filled = st.session_state.free_value.strip() != ""

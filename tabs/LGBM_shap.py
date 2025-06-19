@@ -7,14 +7,11 @@ def run():
     st.write("- Commentaire (lemmatisation Spacy fr_core_news_sm, vectorisation TF-IDF avec stopwords)")
     st.write("- Longueur du commentaire (normalisée avec MinMaxScaler)")
 
-    # commentaire par défaut
-    commentaire_defaut='très bonnes expériences avec showroomprivé : sérieux , choix , qualité , prix et rapidité de livraison.Très satisfaite aussi du service client : retours et remboursements .'
-
-    if "c1" not in st.session_state:
-        st.session_state["c1"] = commentaire_defaut
-
     # zone de saisie du commentaire à tester
-    inputcommentaire=st.text_input("Commentaire à analyser",key="c1",value=st.session_state["c1"])
+    valeur_defaut = st.session_state.get("c1", "")
+    inputcommentaire=st.text_input("Commentaire à analyser",key="free_input_LGBM",value=valeur_defaut)
+    # update c1
+    st.session_state["c1"] = inputcommentaire
 
     # Charger les ressources en cache
     @st.cache_resource(ttl=86400, show_spinner=False)

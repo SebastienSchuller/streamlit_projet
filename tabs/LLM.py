@@ -11,8 +11,8 @@ def run():
     # clear LightGBM analysis cache
     st.session_state["analyse_done"] = False
 
-    if "c1" not in st.session_state:
-        st.session_state["c1"] = commentaire_defaut
+    #if "c1" not in st.session_state:
+    #    st.session_state["c1"] = commentaire_defaut
 
 
     if "mistral_api_key" not in st.session_state:
@@ -38,7 +38,10 @@ def run():
 
     st.markdown("<p style='font-size:0.875rem; font-weight: bold; margin-top:10px; margin-bottom:-50px'>Commentaire à analyser avec le LLM</p>", unsafe_allow_html=True)
     # zone de saisie du commentaire à tester
-    inputcommentaire=st.text_input("Commentaire",key="c1",value=st.session_state["c1"],label_visibility='hidden')
+    valeur_defaut = st.session_state.get("c1", "")
+    inputcommentaire=st.text_input("Commentaire",key="free_input_LLM",value=valeur_defaut,label_visibility='hidden')
+    # update c1
+    st.session_state["c1"] = inputcommentaire
 
     st.markdown("<p style='font-size:0.875rem; font-weight: bold; margin-top:10px; margin-bottom:-50px'>Prompt pour le LLM</p>", unsafe_allow_html=True)
     prompt=st.text_area("Prompt",value="Analyse le commentaire suivant et donne une note de 1 à 5 étoiles. Explique ta note et donne des mots clés associés au commentaire. (5 au maximum)",height=68,label_visibility='hidden')         

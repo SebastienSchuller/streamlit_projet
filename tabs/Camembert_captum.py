@@ -19,14 +19,12 @@ def run():
     # clear LightGBM analysis cache
     st.session_state["analyse_done"] = False
 
-    #st.write('## Sélection du commentaire en entrée du modèle CamemBERT')
-    commentaire_defaut='très bonnes expériences avec showroomprivé : sérieux , choix , qualité , prix et rapidité de livraison.Très satisfaite aussi du service client : retours et remboursements .'
-
-    if "c1" not in st.session_state:
-        st.session_state["c1"] = commentaire_defaut
+    valeur_defaut = st.session_state.get("c1", "")
 
     # zone de saisie du commentaire à tester
-    inputcommentaire=st.text_input("Commentaire à analyser",key="c1",value=st.session_state["c1"])#commentaire_defaut)
+    inputcommentaire=st.text_input("Commentaire à analyser",key="free_input_BERT",value= valeur_defaut)
+    # update c1
+    st.session_state["c1"] = inputcommentaire
     fenetre_occ_max=st.slider("Taille max de la fenêtre d'occlusion (! au temps de calcul) :",1,20,3,1,None,None,"De 1 à ...")
     # bouton de validation
     if st.button("Analyser"):
