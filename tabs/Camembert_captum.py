@@ -70,9 +70,48 @@ def run():
                 predictions = torch.argmax(outputs.logits, dim=1)
                 # st.write(predictions)
                 st.write("Notation du modèle CamemBERT réentrainé :",predictions.to("cpu").numpy()[0] + 1)  # Revenir à la notation initiale (1-5)
-
                 st.markdown(afficher_etoiles(predictions.to("cpu").numpy()[0] + 1), unsafe_allow_html=True)
 
+        
+        # Interprétabilité par SHAP
+        st.divider()
+        st.markdown("<p style='font-size:18px; color:#1f77b4'>Interprétabilité avec SHAP</p>", unsafe_allow_html=True)
+
+
+        import shap
+        import numpy as np
+        # === Création d’un pipeline de classification ===
+        def predict(texts):
+            # Correction : si numpy array, convertir en liste de str
+            if isinstance(texts, np.ndarray):
+                texts = texts.tolist()
+            if isinstance(texts, str):
+                texts = [texts]
+            # Vérification supplémentaire (optionnelle)
+            assert isinstance(texts, list) and all(isinstance(x, str) for x in texts), f"Entrée inattendue : {type(texts)} / {type(texts[0])}"
+            inputs = tokenizer(texts, padding=True, truncation=True, return_tensors="pt")
+            inputs = {k: v.to(model.device) for k, v in inputs.items()}
+            outputs = model(**inputs)
+            probs = torch.nn.functional.softmax(outputs.logits, dim=-1)
+            return probs.detach().cpu().numpy()
+        
+        custom_labels = ["⭐☆☆☆☆", "⭐⭐☆☆☆", "⭐⭐⭐☆☆", "⭐⭐⭐⭐☆", "⭐⭐⭐⭐⭐"]
+        # Créez un masker qui segmente sur les espaces
+        masker = shap.maskers.Text(r"\s")
+        with st.spinner("Calcul de l'interprétabilité avec SHAP..."):
+            # Utilisez ce masker dans l'explainer
+            explainer = shap.Explainer(predict, masker)
+
+            shap_values = explainer([new_comments])
+            shap_values.output_names = custom_labels
+            # === Visualisation pour le premier texte ===
+            # 4. Générer le plot HTML
+            plot_html = shap.plots.text(shap_values[0], display=False)
+
+            # 5. Afficher dans Streamlit
+            st.components.v1.html(plot_html, height=200)
+
+        
         # interprétabilité par Occlusion avec captum
         from captum.attr import Occlusion
 
@@ -145,6 +184,9 @@ def run():
         with st.spinner("Calcul de l'Occlusion..."):
             # calcul du nombre de token
             inputs = tokenizer(inputcommentaire, return_tensors="pt", truncation=True, padding=True)
+
+            #st.write(f"Interprétabilité Captum par occlusion, taille de fenêtre = {fenetre_occ_max}")
+            st.markdown(f"<p style='font-size:18px; color:#1f77b4'>Interprétabilité Captum par occlusion, taille de fenêtre = {fenetre_occ_max}</p>", unsafe_allow_html=True)
 
             for s in range(1,min(inputs['input_ids'].shape[1]+1,fenetre_occ_max+1)):
                 tokens,attrib=interpretabilite_occlusion(model,inputcommentaire,predictions.numpy()[0] + 1,sliding_window_shapes=(s,),show_progress=False)
