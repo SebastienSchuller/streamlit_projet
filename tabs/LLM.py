@@ -144,14 +144,14 @@ def run():
 
             for k in retour.model_dump().keys():
                 if k=="star":
-                    st.write("### Note du commentaire :",retour.star)
+                    st.write("Note du commentaire :",retour.star)
                     st.markdown(afficher_etoiles(retour.star), unsafe_allow_html=True)
                 elif k=="ton":
-                    st.write("### Ton du commentaire :",retour.ton)  
+                    st.write("Ton du commentaire :",retour.ton)  
                 elif k=="keywords":
-                    st.write("### Mots clés associés au commentaire :",retour.keywords)
+                    st.write("Mots clés associés au commentaire :",retour.keywords)
                 elif k=="topic":
-                    st.write("### Sujet du commentaire :",retour.topic)
+                    st.write("Sujet du commentaire :",retour.topic)
 
             #### début partie réponse au commentaire
             st.write("## Réponse au commentaire avec une approche few shot example :")
