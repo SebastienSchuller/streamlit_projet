@@ -32,11 +32,13 @@ def run():
     def on_free_text_change():
         if st.session_state.free_value != "":
             st.session_state.select_value = commentaires[0]
+            # update c1
             st.session_state.c1=st.session_state.free_value
 
     def on_select_change():
         if st.session_state.select_value != commentaires[0]:
            st.session_state.free_value = ""
+           # update c1
            st.session_state.c1=st.session_state.select_value
 
            
@@ -66,14 +68,12 @@ def run():
     if not form_valid and launch:
         st.warning("Veuillez sélectionner ou saisir un commentaire pour pouvoir continuer.")
 
-
     # analyse only if button and form_valid
     if (launch and form_valid): 
         st.divider()
 
         #sauvegarde du commentaire 1 pour les autres pages
         st.session_state["c1"] = inputcommentaire
-
 
         # init du 2ème commentaire pour comparaison
         commentaire_2 = commentaire_defaut
@@ -211,10 +211,6 @@ def run():
         tiktoken_tokens_2=tiktoken.encode(commentaire_spacy_sm_2)
         st.write("### Tiktoken - Tokenisation selon un vocabulaire fixe")
 
-        #col1,col2=st.columns(2)
-        #col1.write(tiktoken_tokens)
-        #col2.write(tiktoken_tokens_2)     
-
         dict_tiktoken={}
         for i, token in enumerate(tiktoken_tokens):
             dict_tiktoken[token]=tiktoken.decode([token])
@@ -222,10 +218,6 @@ def run():
         dict_tiktoken_2={}
         for i, token in enumerate(tiktoken_tokens_2):
             dict_tiktoken_2[token]=tiktoken.decode([token])
-
-        #col1,col2=st.columns(2)
-        #col1.write(dict_tiktoken)
-        #col2.write(dict_tiktoken_2)
 
         #essai de représentation sous forme de dataframe des dictionnaires tiktoken
         df_1=pd.DataFrame(list(dict_tiktoken.items()), columns=["Vecteur_1", "Token_1"])
@@ -246,11 +238,8 @@ def run():
             return AutoTokenizer.from_pretrained(model_path,use_fast=False)#,local_files_only=True)
         
         # chargement du tokenizer et du modèle
-        with st.spinner("Chargement du modèle..."):
-
-            
+        with st.spinner("Chargement du modèle..."):           
             import torch
-
             import os
             if "STREAMLIT_SERVER_RUN_ON_SAVE" in os.environ:
                 #st.write("Exécution sur Streamlit Cloud")
@@ -263,12 +252,9 @@ def run():
             
 
             # chargement du tokenizer    
-            #tokenizer = AutoTokenizer.from_pretrained(model_path,use_fast=False,local_files_only=True)
             tokenizer=load_tokenizer(model_path)
-            # tokenizer = AutoTokenizer.from_pretrained(model_path,use_fast=False)
 
             # chargement du modèle
-            # model = AutoModelForSequenceClassification.from_pretrained(model_path)
             model=load_model(model_path)
 
         with st.spinner("Tokenisation..."):

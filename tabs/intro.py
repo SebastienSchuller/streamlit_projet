@@ -44,7 +44,6 @@ Dans le cadre du projet qui nous a été confié, nous nous sommes concentrés s
   choix = st.selectbox("Quelle visualisation souhaitez-vous afficher ?", options)
 
   if choix == options[1]:
-    #st.write("Voici la partie sur l'analyse de sentiments...")
     image = Image.open("assets/commentaire_wordcloud.jpg")
     st.image(image, caption="Word Cloud du champ 'Commentaire'", use_container_width =False)
 

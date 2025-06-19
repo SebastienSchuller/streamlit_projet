@@ -37,14 +37,7 @@ PAGES = OrderedDict(
     ]
 )
 
-# pages à ajouter: =["Présentation du projet","Exploration", "Feature Engineering", "DataVisualisation", "Performance des modèles", "Simulation LGBM + shap", "Simulation Camembert + Captum","Simulation LLM"]
-
 def run():
-    # logo orange et DS ?
-    #st.sidebar.image(
-    #""    "https://dst-studio-template.s3.eu-west-3.amazonaws.com/logo-datascientest.png",
-    #    width=200,
-    #)
 
     import base64
 

@@ -11,10 +11,6 @@ def run():
     # clear LightGBM analysis cache
     st.session_state["analyse_done"] = False
 
-    #if "c1" not in st.session_state:
-    #    st.session_state["c1"] = commentaire_defaut
-
-
     if "mistral_api_key" not in st.session_state:
         st.session_state["mistral_api_key"] = ""
 
