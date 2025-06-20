@@ -166,9 +166,9 @@ def run():
                 elif diff_cols == 2:
                     st.write('')
                 elif diff_cols == 1:
-                    if options[3] in retour.model_dump().keys():
+                    if options[2] in retour.model_dump().keys():
                         st.write("### Mots clés :",retour.keywords)
-                    elif options[2] in retour.model_dump().keys():
+                    elif options[3] in retour.model_dump().keys():
                         st.write("### Sujet :",retour.topic)
         
             with col2:
@@ -179,14 +179,14 @@ def run():
                 elif diff_cols == 2:   
                     if options[1] in retour.model_dump().keys():
                         st.write("### Ton :",retour.ton)
-                    elif options[2] in retour.model_dump().keys():
-                        st.write("### Sujet :",retour.topic)
                     elif options[3] in retour.model_dump().keys():
+                        st.write("### Sujet :",retour.topic)
+                    elif options[2] in retour.model_dump().keys():
                         st.write("### Mots clés :",retour.keywords)
                 elif diff_cols == 1:
                     if options[1] in retour.model_dump().keys():
                         st.write("### Ton :",retour.ton)
-                    elif options[2] in retour.model_dump().keys():
+                    elif options[3] in retour.model_dump().keys():
                         st.write("### Sujet :",retour.topic)
 
                 
