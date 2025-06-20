@@ -16,9 +16,7 @@ def load_tokenizer(model_path):
 
 
 def run():
-    # clear LightGBM analysis cache
-    st.session_state["analyse_done"] = False
-
+   
     valeur_defaut = st.session_state.get("c1", "")
 
     # zone de saisie du commentaire à tester
@@ -26,8 +24,11 @@ def run():
     # update c1
     st.session_state["c1"] = inputcommentaire
     fenetre_occ_max=st.slider("Taille max de la fenêtre d'occlusion (! au temps de calcul) :",1,20,3,1,None,None,"De 1 à ...")
+
+    do_analysis =  st.session_state.get("bert_done") and st.session_state.get("bert_analysed_comment") == inputcommentaire
+
     # bouton de validation
-    if st.button("Analyser"):
+    if (st.button("Analyser") or do_analysis):
         st.divider()
 
         # chargement du tokenizer et du modèle
@@ -80,7 +81,7 @@ def run():
 
         import shap
         import numpy as np
-        # === Création d’un pipeline de classification ===
+        
         def predict(texts):
             # Correction : si numpy array, convertir en liste de str
             if isinstance(texts, np.ndarray):
@@ -100,16 +101,18 @@ def run():
         masker = shap.maskers.Text(r"\s")
         with st.spinner("Calcul de l'interprétabilité avec SHAP..."):
             # Utilisez ce masker dans l'explainer
-            explainer = shap.Explainer(predict, masker)
 
+            # Interprétabilité avec shap
+            @st.cache_resource(ttl=86400, show_spinner=False)
+            def get_shap_explainer_values():
+                return shap.Explainer(predict, masker)
+            
+            explainer = get_shap_explainer_values()
             shap_values = explainer([new_comments])
             shap_values.output_names = custom_labels
-            # === Visualisation pour le premier texte ===
-            # 4. Générer le plot HTML
-            plot_html = shap.plots.text(shap_values[0], display=False)
-
-            # 5. Afficher dans Streamlit
-            st.components.v1.html(plot_html, height=200)
+            
+            from streamlit_shap import st_shap
+            st_shap(shap.plots.text(shap_values[0]), height=200)
 
         
         # interprétabilité par Occlusion avec captum
@@ -193,3 +196,7 @@ def run():
 
                 html_content=show_texte_color(tokens[1:-1],attrib[1:-1]) # avec le slicing on retire les tokens de début et fin de phrase (<s> et </s> qui en plus font l'affichage barré)
                 st.html(html_content)
+        
+        # save session state
+        st.session_state["bert_analysed_comment"] = inputcommentaire
+        st.session_state["bert_done"] = True

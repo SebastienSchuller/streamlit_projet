@@ -29,8 +29,11 @@ def run():
     if st.button("Analyser"):
         st.session_state["analyse_done"] = True
         st.session_state["commentaire"] = inputcommentaire
+        
+
+    do_analysis =  st.session_state.get("lgbm_done") and st.session_state.get("lgbm_analysed_comment") == inputcommentaire  
     
-    if st.session_state.get("analyse_done"):
+    if (st.session_state.get("analyse_done") or do_analysis):
         from func import afficher_etoiles
         import spacy, re, emoji, numpy as np, pandas as pd
         import shap
@@ -106,5 +109,8 @@ def run():
                 feature_names=feature_names
             ), height=200, width=1000)
     
-
+        # save session state
+        st.session_state["lgbm_analysed_comment"] = inputcommentaire
+        st.session_state["lgbm_done"] = True
+        st.session_state["analyse_done"] = False
 

@@ -68,8 +68,10 @@ def run():
     if not form_valid and launch:
         st.warning("Veuillez sélectionner ou saisir un commentaire pour pouvoir continuer.")
 
+    do_analysis =  st.session_state.get("fe_done") and st.session_state.get("fe_analysed_comment") == inputcommentaire
+
     # analyse only if button and form_valid
-    if (launch and form_valid): 
+    if ((launch and form_valid) or do_analysis): 
         st.divider()
 
         #sauvegarde du commentaire 1 pour les autres pages
@@ -276,3 +278,7 @@ def run():
             cls_vector = last_hidden_state[:, 0, :]
         st.write("Vecteur [CLS] passé à la tête de classification")
         st.dataframe(pd.DataFrame(cls_vector))
+
+        # save session state
+        st.session_state["fe_analysed_comment"] = inputcommentaire
+        st.session_state["fe_done"] = True
