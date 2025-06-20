@@ -146,7 +146,6 @@ def run():
             retour=eval(inputcommentaire)
             st.markdown("<p style='font-size:32px; color:#1f77b4'>Résultat de l'évaluation du LLM</p>", unsafe_allow_html=True)
 
-
             col1, col2, col3, col4 = st.columns(4)
             diff_cols = len(options) - len(retour.model_dump().keys())
 
@@ -156,7 +155,7 @@ def run():
                
             with col4:
                 if diff_cols == 0:
-                   st.write("### Mots clés :",retour.keywords)                  
+                   st.dataframe(retour.keywords,column_config={'value':'Mots clés'})
                 else:
                     st.write("") 
 
@@ -167,7 +166,7 @@ def run():
                     st.write('')
                 elif diff_cols == 1:
                     if options[2] in retour.model_dump().keys():
-                        st.write("### Mots clés :",retour.keywords)
+                        st.dataframe(retour.keywords,column_config={'value':'Mots clés'})
                     elif options[3] in retour.model_dump().keys():
                         st.write("### Sujet :",retour.topic)
         
@@ -182,7 +181,7 @@ def run():
                     elif options[3] in retour.model_dump().keys():
                         st.write("### Sujet :",retour.topic)
                     elif options[2] in retour.model_dump().keys():
-                        st.write("### Mots clés :",retour.keywords)
+                        st.dataframe(retour.keywords,column_config={'value':'Mots clés'})
                 elif diff_cols == 1:
                     if options[1] in retour.model_dump().keys():
                         st.write("### Ton :",retour.ton)
