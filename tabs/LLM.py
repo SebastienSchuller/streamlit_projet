@@ -146,27 +146,49 @@ def run():
             retour=eval(inputcommentaire)
             st.markdown("<p style='font-size:32px; color:#1f77b4'>Résultat de l'évaluation du LLM</p>", unsafe_allow_html=True)
 
-            #for k in retour.model_dump().keys():
-            #    if k=="star":
-            #        st.write("### Note du commentaire :",retour.star)
-            #        st.markdown(afficher_etoiles(retour.star), unsafe_allow_html=True)
-            #    elif k=="ton":
-            #        st.write("### Ton du commentaire :",retour.ton)  
-            #    elif k=="keywords":
-            #        st.write("### Mots clés associés au commentaire :",retour.keywords)
-            #    elif k=="topic":
-            #        st.write("### Sujet du commentaire :",retour.topic)
 
             col1, col2, col3, col4 = st.columns(4)
+            diff_cols = len(options) - len(retour.model_dump().keys())
+
             with col1: 
                 st.write("### Note du commentaire :",retour.star)
                 st.markdown(afficher_etoiles(retour.star), unsafe_allow_html=True)
-            with col2:
-                st.write("### Ton :",retour.ton) 
-            with col3:
-                st.write("### Sujet :",retour.topic)
+               
             with col4:
-                st.write("### Mots clés :",retour.keywords)
+                if diff_cols == 0:
+                   st.write("### Mots clés :",retour.keywords)                  
+                else:
+                    st.write("") 
+
+            with col3:
+                if diff_cols == 0:
+                    st.write("### Sujet :",retour.topic)
+                elif diff_cols == 2:
+                    st.write('')
+                elif diff_cols == 1:
+                    if options[3] in retour.model_dump().keys():
+                        st.write("### Mots clés :",retour.keywords)
+                    elif options[2] in retour.model_dump().keys():
+                        st.write("### Sujet :",retour.topic)
+        
+            with col2:
+                if diff_cols == 0:
+                    st.write("### Ton :",retour.ton)
+                elif diff_cols == 3:
+                    st.write('')
+                elif diff_cols == 2:   
+                    if options[1] in retour.model_dump().keys():
+                        st.write("### Ton :",retour.ton)
+                    elif options[2] in retour.model_dump().keys():
+                        st.write("### Sujet :",retour.topic)
+                    elif options[3] in retour.model_dump().keys():
+                        st.write("### Mots clés :",retour.keywords)
+                elif diff_cols == 1:
+                    if options[1] in retour.model_dump().keys():
+                        st.write("### Ton :",retour.ton)
+                    elif options[2] in retour.model_dump().keys():
+                        st.write("### Sujet :",retour.topic)
+
                 
             #### début partie réponse au commentaire
             st.markdown("<p style='font-size:32px; color:#1f77b4'>Réponse au commentaire avec une approche few shot examples</p>", unsafe_allow_html=True)
