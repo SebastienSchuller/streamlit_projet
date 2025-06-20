@@ -16,8 +16,9 @@ def run():
         
     with st.popover("Paramètres LLM"):
         st.markdown("Saisissez ici une clé pour l'API de Mistral AI.")
-        mistral_api_key = st.text_input("Mistral AI API Key",type='password',value=st.session_state["mistral_api_key"])
-        if mistral_api_key != st.session_state["mistral_api_key"]:
+        mistral_api_key_session = st.session_state.get("mistral_api_key")
+        mistral_api_key = st.text_input("Mistral AI API Key",type='password',value= mistral_api_key_session)
+        if mistral_api_key != mistral_api_key_session:
             st.session_state["mistral_api_key"] = mistral_api_key
 
         st.markdown("Saisissez ici une configuration de proxy si nécessaire.")
@@ -61,7 +62,6 @@ def run():
         if cols[i].checkbox(option, key=option,value=True,disabled=dis):
             selected_fields.append(option)
 
-
     st.markdown("<p style='font-size:0.875rem; font-weight: bold; margin-top:10px; margin-bottom:-20px'>Choix de la température</p>", unsafe_allow_html=True)
     #st.write("## Température") 
     temperature = st.slider(
@@ -73,8 +73,14 @@ def run():
         label_visibility='hidden'
     )
     
+    # analysis already done ?
+    session_temperature = st.session_state.get("llm_temp") == temperature
+    session_commentaire = st.session_state.get("llm_comment") == inputcommentaire
+
+    do_analysis = session_temperature and session_commentaire
+
     # bouton de validation
-    if st.button("Analyser et répondre au commentaire"):
+    if (st.button("Analyser et répondre au commentaire") or do_analysis):
         if mistral_api_key=="":
             st.error("Veuillez saisir une clé API Mistral AI dans le popover en haut à gauche de l'écran.")
         else:
@@ -138,22 +144,32 @@ def run():
                 return docs
             
             retour=eval(inputcommentaire)
-            st.write("## Résultat de l'évaluation du LLM :") 
-            # st.write(retour)
+            st.markdown("<p style='font-size:32px; color:#1f77b4'>Résultat de l'évaluation du LLM</p>", unsafe_allow_html=True)
 
-            for k in retour.model_dump().keys():
-                if k=="star":
-                    st.write("### Note du commentaire :",retour.star)
-                    st.markdown(afficher_etoiles(retour.star), unsafe_allow_html=True)
-                elif k=="ton":
-                    st.write("### Ton du commentaire :",retour.ton)  
-                elif k=="keywords":
-                    st.write("### Mots clés associés au commentaire :",retour.keywords)
-                elif k=="topic":
-                    st.write("### Sujet du commentaire :",retour.topic)
+            #for k in retour.model_dump().keys():
+            #    if k=="star":
+            #        st.write("### Note du commentaire :",retour.star)
+            #        st.markdown(afficher_etoiles(retour.star), unsafe_allow_html=True)
+            #    elif k=="ton":
+            #        st.write("### Ton du commentaire :",retour.ton)  
+            #    elif k=="keywords":
+            #        st.write("### Mots clés associés au commentaire :",retour.keywords)
+            #    elif k=="topic":
+            #        st.write("### Sujet du commentaire :",retour.topic)
 
+            col1, col2, col3, col4 = st.columns(4)
+            with col1: 
+                st.write("### Note du commentaire :",retour.star)
+                st.markdown(afficher_etoiles(retour.star), unsafe_allow_html=True)
+            with col2:
+                st.write("### Ton :",retour.ton) 
+            with col3:
+                st.write("### Sujet :",retour.topic)
+            with col4:
+                st.write("### Mots clés :",retour.keywords)
+                
             #### début partie réponse au commentaire
-            st.write("## Réponse au commentaire avec une approche few shot example :")
+            st.markdown("<p style='font-size:32px; color:#1f77b4'>Réponse au commentaire avec une approche few shot examples</p>", unsafe_allow_html=True)
             auto_examples=[{'input': 'Nom client: nan Commentaire:Je ne recommande pas Showroomprivé en '
                         'Belgique . Service client : 0 ! En fonction des marques , il '
                         'arrive que les produits arrivent abîmés , que des erreurs sur le '
@@ -250,7 +266,7 @@ def run():
             st.info(retour.reponse)
 
             ## Réponse sans fewshot ?
-            st.write("## Réponse au commentaire sans l'approche few shot example :")
+            st.markdown("<p style='font-size:32px; color:#1f77b4'>Réponse au commentaire sans few shot examples</p>", unsafe_allow_html=True)
             st.write("Prompt : Tu es un professionnel du service client après-vente, qui analyse et répond à des commentaires laissés par des clients suite à une commande.")
             structured_llm_without_example=llm.with_structured_output(Reponse_commentaire)
             # Prompt
@@ -276,3 +292,7 @@ def run():
 
             st.write("Réponse générée :")
             st.info(retour.reponse)
+
+            # save session state
+            st.session_state["llm_temp"] = temperature
+            st.session_state["llm_comment"] = inputcommentaire
