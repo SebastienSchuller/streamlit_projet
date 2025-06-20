@@ -53,12 +53,13 @@ def run():
 
     # Liste des champs disponibles    
     options = ["star", "ton", "keywords", "topic"]
-    cols = st.columns(len(options))  # Crée une colonne par option
+    cols = st.columns([0.1,0.1,0.1,0.1,0.6])  # Crée une colonne par option
 
-    selected_fields = []
-    for option in options:
-        if st.checkbox(option, key=option,value=True):
+    selected_fields=[]
+    for i,option in enumerate(options):
+        if cols[i].checkbox(option, key=option,value=True):
             selected_fields.append(option)
+
 
     st.markdown("<p style='font-size:0.875rem; font-weight: bold; margin-top:10px; margin-bottom:-20px'>Choix de la température</p>", unsafe_allow_html=True)
     #st.write("## Température") 
