@@ -57,7 +57,8 @@ def run():
 
     selected_fields=[]
     for i,option in enumerate(options):
-        if cols[i].checkbox(option, key=option,value=True):
+        dis=True if option=='star' else False
+        if cols[i].checkbox(option, key=option,value=True,disabled=dis):
             selected_fields.append(option)
 
 
