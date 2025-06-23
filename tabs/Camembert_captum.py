@@ -23,7 +23,7 @@ def run():
     inputcommentaire=st.text_input("Commentaire à analyser",key="free_input_BERT",value= valeur_defaut)
     # update c1
     st.session_state["c1"] = inputcommentaire
-    fenetre_occ_max=st.slider("Taille max de la fenêtre d'occlusion (! au temps de calcul) :",1,20,3,1,None,None,"De 1 à ...")
+    fenetre_occ_max=st.slider("Taille max de la fenêtre d'occlusion (! au temps de calcul) :",1,20,10,1,None,None,"De 1 à ...")
 
     do_analysis =  st.session_state.get("bert_done") and st.session_state.get("bert_analysed_comment") == inputcommentaire
 
