@@ -99,16 +99,18 @@ def run():
         custom_labels = ["⭐☆☆☆☆", "⭐⭐☆☆☆", "⭐⭐⭐☆☆", "⭐⭐⭐⭐☆", "⭐⭐⭐⭐⭐"]
         # Créez un masker qui segmente sur les espaces
         masker = shap.maskers.Text(r"\s")
+
+        # Interprétabilité avec shap
+        @st.cache_resource(ttl=86400, show_spinner=False)
+        def get_shap_explainer_values(comment):
+            explainer=shap.Explainer(predict, masker)
+            shap_values = explainer([comment])
+            return shap_values
+
+
         with st.spinner("Calcul de l'interprétabilité avec SHAP..."):
             # Utilisez ce masker dans l'explainer
 
-            # Interprétabilité avec shap
-            @st.cache_resource(ttl=86400, show_spinner=False)
-            def get_shap_explainer_values(comment):
-                explainer=shap.Explainer(predict, masker)
-                shap_values = explainer([comment])
-                return shap_values
-            
             shap_values=  get_shap_explainer_values(new_comments)
             shap_values.output_names = custom_labels
             
