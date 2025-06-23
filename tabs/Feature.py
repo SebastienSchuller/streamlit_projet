@@ -19,7 +19,8 @@ def run():
 
     # Commentaires proposés dans la liste déroulante
     commentaires = ["Veuillez sélectionner...", commentaire_defaut, "c est des voleur j ais commande des albums photo et jamais recus les codes , conclusion e dans l os , merci voleur prive ,", 
-                    "Madame , Monsieur , MA COMMANDE NE M'EST PAS PARVENUE ET JE SUIS EXTREMEMENT MECONTENTE . J'AI FAIT A CET EGARD 2 RECLAMATIONS AUPRES DE VOS SERVICES . MERCI DE FAIRE LE NECESSAIRE",
+                    "Madame , Monsieur , ma commande ne m'est pas parvenue et je suis extremement mecontente . J'ai fait a cet egard 2 reclamations aupres de vos services . Merci de faire le necessaire",
+                    #"Madame , Monsieur , MA COMMANDE NE M'EST PAS PARVENUE ET JE SUIS EXTREMEMENT MECONTENTE . J'AI FAIT A CET EGARD 2 RECLAMATIONS AUPRES DE VOS SERVICES . MERCI DE FAIRE LE NECESSAIRE",
                     "Vente-privee des voleur à fuir vous faites pas avoir comme moi ServiceClient lamentable 👎 😡😡😡😡😡😡😡😡😡😡😡😡😡😡😡😡 💩 💩 💩 💩"]
 
     # Initialisation des valeurs par défaut si elles n'existent pas encore

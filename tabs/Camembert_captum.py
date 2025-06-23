@@ -104,11 +104,12 @@ def run():
 
             # Interprétabilité avec shap
             @st.cache_resource(ttl=86400, show_spinner=False)
-            def get_shap_explainer_values():
-                return shap.Explainer(predict, masker)
+            def get_shap_explainer_values(comment):
+                explainer=shap.Explainer(predict, masker)
+                shap_values = explainer([comment])
+                return shap_values
             
-            explainer = get_shap_explainer_values()
-            shap_values = explainer([new_comments])
+            shap_values=  get_shap_explainer_values(new_comments)
             shap_values.output_names = custom_labels
             
             from streamlit_shap import st_shap
@@ -127,7 +128,7 @@ def run():
         
         occlusion = Occlusion(forward_func)
 
-        #@st.cache_resource(ttl=86400,show_spinner=False)        
+        @st.cache_resource(ttl=86400,show_spinner=False)        
         def interpretabilite_occlusion(_model,x,y,sliding_window_shapes=(1,),show_progress=True):
             inputs = tokenizer(x, return_tensors="pt", truncation=True, padding=True)
             input_ids = inputs["input_ids"]
