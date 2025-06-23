@@ -146,49 +146,32 @@ def run():
             retour=eval(inputcommentaire)
             st.markdown("<p style='font-size:32px; color:#1f77b4'>Résultat de l'évaluation du LLM</p>", unsafe_allow_html=True)
 
-            col1, col2, col3, col4 = st.columns(4)
-            diff_cols = len(options) - len(retour.model_dump().keys())
+            display_order = ["star", "ton", "topic", "keywords"]
+            # Extraction des champs présents dans `retour`
+            present_keys = retour.model_dump().keys()
 
-            with col1: 
-                st.write("### Note du commentaire :",retour.star)
-                st.markdown(afficher_etoiles(retour.star), unsafe_allow_html=True)
-               
-            with col4:
-                if diff_cols == 0:
-                   st.dataframe(retour.keywords,column_config={'value':'Mots clés'})
-                else:
-                    st.write("") 
+            # Construction dynamique des colonnes nécessaires
+            visible_keys = [key for key in display_order if key in present_keys]
+            cols = st.columns(len(visible_keys))
 
-            with col3:
-                if diff_cols == 0:
-                    st.write("### Sujet :",retour.topic)
-                elif diff_cols == 2:
-                    st.write('')
-                elif diff_cols == 1:
-                    if options[2] in retour.model_dump().keys():
-                        st.dataframe(retour.keywords,column_config={'value':'Mots clés'})
-                    elif options[3] in retour.model_dump().keys():
-                        st.write("### Sujet :",retour.topic)
-        
-            with col2:
-                if diff_cols == 0:
-                    st.write("### Ton :",retour.ton)
-                elif diff_cols == 3:
-                    st.write('')
-                elif diff_cols == 2:   
-                    if options[1] in retour.model_dump().keys():
-                        st.write("### Ton :",retour.ton)
-                    elif options[3] in retour.model_dump().keys():
-                        st.write("### Sujet :",retour.topic)
-                    elif options[2] in retour.model_dump().keys():
-                        st.dataframe(retour.keywords,column_config={'value':'Mots clés'})
-                elif diff_cols == 1:
-                    if options[1] in retour.model_dump().keys():
-                        st.write("### Ton :",retour.ton)
-                    elif options[3] in retour.model_dump().keys():
-                        st.write("### Sujet :",retour.topic)
-
-                
+            # Remplissage des colonnes selon l'ordre
+            for key, col in zip(visible_keys, cols):
+                with col:
+                    if key == "star":
+                        st.write("### Note du commentaire :", retour.star)
+                        st.markdown(afficher_etoiles(retour.star), unsafe_allow_html=True)
+                    elif key == "ton":
+                        st.write("### Ton :", retour.ton)
+                    elif key == "topic":
+                        st.write("### Sujet :", retour.topic)
+                    elif key == "keywords":
+                        st.write("### Mots clés :")
+                        html = "<table style='border-collapse: collapse;'>"
+                        for item in retour.keywords:
+                            html += f"<tr><td style='border: 1px solid #ccc; padding: 8px;'>{item}</td></tr>"
+                        html += "</table>"
+                        st.markdown(html, unsafe_allow_html=True)
+   
             #### début partie réponse au commentaire
             st.markdown("<p style='font-size:32px; color:#1f77b4'>Réponse au commentaire avec une approche few shot examples</p>", unsafe_allow_html=True)
             auto_examples=[{'input': 'Nom client: nan Commentaire:Je ne recommande pas Showroomprivé en '
