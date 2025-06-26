@@ -12,8 +12,7 @@ def show_footer():
 
 
 
-
-st.set_page_config(page_title="DS - Orange - Supply Chain", page_icon="⭐",layout="wide")
+st.set_page_config(page_title="jun24cds_supply_chain", page_icon="assets/icone-star.png",layout="wide")
 
 with open("style.css", "r") as f:
     style = f.read()
