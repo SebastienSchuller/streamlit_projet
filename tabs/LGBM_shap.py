@@ -78,10 +78,12 @@ def run():
         X_pred_vector=pd.DataFrame(np.hstack((vector_commentaire.todense(),comm_length)))
 
         y_test=model.predict(X_pred_vector)
-        st.write("Le modèle LGBM prédit une note de :",y_test[0],"pour ce commentaire.")
-       
+
+        st.divider()
+        st.write(f"****Le modèle LGBM prédit une note de :",y_test[0],"pour ce commentaire.****")
         # Affichage de la note sous forme d'étoiles
         st.markdown(afficher_etoiles(y_test[0]), unsafe_allow_html=True)
+        st.divider()
 
         shap_methods = ["Waterfall", "Force_plot"]
         shap_method = st.selectbox("Interprétabilité de la prédiction via SHAP", shap_methods)
